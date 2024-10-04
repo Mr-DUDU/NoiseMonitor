@@ -67,3 +67,121 @@ El objetivo principal de NoiseMonitor es ayudar a los docentes a mantener un amb
 ---
 
 © 2024 Ministerio de Educación del Ecuador - David Averos "MrDUDU"
+
+"use strict";
+
+// tipos de estados
+const ESTADO_ESTABLE = 'estable';
+const ESTADO_MODERADO = 'moderado';
+const ESTADO_ALTO = 'alto';
+
+// Umbrales
+let UMBRAL_ESTABLE = 0;     // Nivel de ruido bajo
+let UMBRAL_MODERADO = 20;    // Nivel de ruido moderado
+let UMBRAL_ALTO = 30;       // Nivel de ruido alto
+
+// Variables iniciales
+let nivelRuido = 0; // Inicialmente en 0
+let estadoActual = ESTADO_ESTABLE;
+
+// Función detectora de ruido
+function detectarNivelRuido(nivel) {
+  if (nivel >= UMBRAL_ESTABLE && nivel < UMBRAL_MODERADO) {
+    return ESTADO_ESTABLE;
+  } else if (nivel >= UMBRAL_MODERADO && nivel < UMBRAL_ALTO) {
+    return ESTADO_MODERADO;
+  } else if (nivel >= UMBRAL_ALTO) {
+    return ESTADO_ALTO;
+  } else {
+    return 'desconocido';
+  }
+}
+
+// Función para actualizar la interfaz
+function actualizarInterfaz(estado) {
+    const indicador = document.getElementById('indicador-estado');
+    const estadoTexto = indicador.querySelector('p');
+    const animacionRuido = document.getElementById('animacion-ruido');
+
+    // Remover clases anteriores
+    animacionRuido.classList.remove('estado-estable', 'estado-moderado', 'estado-alto');
+
+    switch (estado) {
+        case ESTADO_ESTABLE:
+            indicador.className = 'estado-estable';
+            estadoTexto.textContent = 'Estado: Estable';
+            animacionRuido.classList.add('estado-estable');
+            break;
+        case ESTADO_MODERADO:
+            indicador.className = 'estado-moderado';
+            estadoTexto.textContent = 'Estado: Moderado';
+            animacionRuido.classList.add('estado-moderado');
+            break;
+        case ESTADO_ALTO:
+            indicador.className = 'estado-alto';
+            estadoTexto.textContent = 'Estado: Alto';
+            animacionRuido.classList.add('estado-alto');
+            break;
+        default:
+            indicador.className = '';
+            estadoTexto.textContent = 'Estado desconocido';
+            break;
+    }
+}
+
+  
+
+// Función para iniciar la detección de sonido real
+function iniciarDeteccionSonido() {
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(function(stream) {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const mediaStreamSource = audioContext.createMediaStreamSource(stream);
+      const analyser = audioContext.createAnalyser();
+
+      analyser.fftSize = 256;
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+      mediaStreamSource.connect(analyser);
+
+      function obtenerNivelRuido() {
+        // Actualizar la barra de progreso
+        const barraNivelRuido = document.getElementById('nivel-ruido');
+        if (barraNivelRuido) {
+        barraNivelRuido.value = nivelRuido;
+        }
+
+        analyser.getByteFrequencyData(dataArray);
+
+        // Calcular el promedio de los valores de frecuencia
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) {
+          sum += dataArray[i];
+        }
+        let promedio = sum / dataArray.length;
+
+        // Actualizar el nivel de ruido global
+        nivelRuido = promedio;
+
+        // Detectar el estado actual basado en el nivel de ruido
+        estadoActual = detectarNivelRuido(nivelRuido);
+
+        // Actualizar la interfaz (consola, en este caso)
+        actualizarInterfaz(estadoActual);
+
+        // Repetir la detección
+        requestAnimationFrame(obtenerNivelRuido);
+      }
+
+      // Comenzar la detección
+      obtenerNivelRuido();
+    })
+    .catch(function(err) {
+      console.error('Error al acceder al micrófono:', err);
+    });
+}
+
+// Iniciar la detección de sonido cuando la página esté cargada
+document.addEventListener('DOMContentLoaded', () => {
+  iniciarDeteccionSonido();
+});
