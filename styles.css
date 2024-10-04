@@ -1,12 +1,30 @@
-body {
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
+header {
+    height: 15vh; /* 15% de la altura de la vista */
+    background-color: #f8f9fa;
+  }
 
-canvas {
-    border: 1px solid #333;
-}
+  footer {
+    height: 10vh; /* 10% de la altura de la vista */
+    background-color: #f8f9fa;
+  }
+
+  section {
+    height: 75vh; /* 75% de la altura de la vista */
+    background-color: #e9ecef;
+  }
+
+  #visualizador {
+    width: 100%;  /* Ancho total del div padre */
+    height: 80%;  /* Altura ajustada al 80% del div padre */
+    border: 1px solid #333;  /* Borde del canvas */
+    background-color: white; /* Fondo blanco */
+    border-radius: 10px; /* Esquinas redondeadas */
+  }
+
+  /* Asegurar que el div contenedor tenga suficiente altura */
+  .canvas-container {
+    height: 70vh; /* Ajuste de altura del div contenedor */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Espacio adecuado entre el título y el canvas */
+  }
