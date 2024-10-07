@@ -28,3 +28,8 @@ header {
     flex-direction: column;
     justify-content: space-between; /* Espacio adecuado entre el título y el canvas */
   }
+
+  /* Transición suave para las imágenes */
+    #estado-imagen {
+        transition: opacity 0.5s ease-in-out;
+    }

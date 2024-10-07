@@ -1,66 +1,162 @@
 "use strict";
 
-// Autor: MrDUDU - David Averos
-// Última actualización: 2024-10-03
+//Author: David Averos
+//Last update: 2024-10-07
 
-// Esperar a que el documento se haya cargado completamente antes de iniciar
+// Variables globales para los umbrales de ruido (ajustados para un entorno silencioso)
+let umbralEstable = 20;    // Umbral máximo para "Estable"
+let umbralModerado = 50;   // Umbral máximo para "Moderado"
+let umbralAlto = 70;       // Umbral mínimo para "Alto"
+
+// Variables de imágenes para los diferentes estados
+const imagenes = {
+    estable: "https://static.vecteezy.com/system/resources/previews/013/453/453/non_2x/number-1-3d-gold-one-free-png.png",
+    moderado: "https://static.vecteezy.com/system/resources/thumbnails/022/502/925/small/number-2-pink-alphabet-glossy-png.png",
+    alto: "https://static.thenounproject.com/png/77879-200.png"  // Reutilizamos esta imagen para el nivel "Alto"
+};
+
+// Variable para controlar el estado actual de la imagen para evitar recambios innecesarios
+let estadoActualImagen = 'estable';
+
+// Función para inicializar la detección de sonido y configurar el visualizador
 document.addEventListener('DOMContentLoaded', () => {
     iniciarDeteccionSonido();
 });
 
 /**
- * Función para iniciar la detección de sonido y configurar el visualizador de audio.
+ * Función para iniciar la detección de sonido.
+ * Conecta el micrófono al analizador de audio y muestra las barras visuales en el canvas.
  */
 function iniciarDeteccionSonido() {
-    // Solicitar acceso al micrófono
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(function(stream) {
-        // Crear el contexto de audio
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const mediaStreamSource = audioContext.createMediaStreamSource(stream);
         const analyser = audioContext.createAnalyser();
+        
+        analyser.fftSize = 256;  // Configurar la FFT para precisión
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        mediaStreamSource.connect(analyser);
 
-        // Configurar el analizador
-        analyser.fftSize = 256;  // Tamaño FFT para precisión en las frecuencias
-        const dataArray = new Uint8Array(analyser.frequencyBinCount);  // Crear arreglo de datos de frecuencias
-        mediaStreamSource.connect(analyser);  // Conectar el flujo de audio al analizador
-
-        // Obtener el contexto del canvas donde se dibujarán las barras
         const canvas = document.getElementById('visualizador');
         const canvasContext = canvas.getContext('2d');
 
-        // Función para dibujar el visualizador de barras
+        // Función que dibuja el visualizador en el canvas
         function dibujarVisualizador() {
-            // Solicitar el siguiente frame de animación
             requestAnimationFrame(dibujarVisualizador);
 
-            // Obtener los datos de frecuencia de audio en tiempo real
             analyser.getByteFrequencyData(dataArray);
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
 
-            // Limpiar el canvas (usando el fondo blanco definido en CSS)
-            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Dibujar las barras
-            const barraAncho = (canvas.width / dataArray.length) * 2.5; // Ajusta el tamaño de las barras
+            const barraAncho = (canvas.width / dataArray.length) * 2.5;
             let posX = 0;
 
+            let nivelRuido = calcularNivelRuido(dataArray);  // Obtener nivel medio del ruido
+
+            ajustarVisualizacion(nivelRuido); // Ajustar visualización (barras e imagen)
+
             for (let i = 0; i < dataArray.length; i++) {
-                const valor = dataArray[i];  // Valor de la frecuencia actual
-                const altura = (valor / 256) * canvas.height;  // Escalar a la altura del canvas
+                const valor = dataArray[i];
+                const altura = (valor / 256) * canvas.height;
 
-                // Estilo de las barras
-                canvasContext.fillStyle = 'purple';  // Color de las barras
-                canvasContext.fillRect(posX, canvas.height - altura, barraAncho, altura);  // Dibujar la barra
+                // Establecer el color de las barras de manera gradual según el nivel de ruido
+                canvasContext.fillStyle = calcularColorGradual(nivelRuido, umbralEstable, umbralModerado, umbralAlto);
+                canvasContext.fillRect(posX, canvas.height - altura, barraAncho, altura); // Dibujar la barra
 
-                posX += barraAncho + 1;  // Espacio entre barras
+                posX += barraAncho + 1;
             }
         }
 
-        // Iniciar la visualización
+        // Iniciar el proceso de visualización
         dibujarVisualizador();
     })
     .catch(function(err) {
-        // Manejar errores de acceso al micrófono
         console.error('Error al acceder al micrófono:', err);
     });
+}
+
+/**
+ * Función para calcular el nivel de ruido en base a los datos de frecuencia.
+ * @param {Uint8Array} dataArray - Arreglo de frecuencias
+ * @returns {number} - Nivel medio de ruido
+ */
+function calcularNivelRuido(dataArray) {
+    let suma = dataArray.reduce((a, b) => a + b, 0);
+    return suma / dataArray.length;
+}
+
+/**
+ * Función para ajustar el color de las barras y cambiar la imagen y el texto del estado
+ * de acuerdo con el nivel de ruido.
+ * @param {number} nivelRuido - Nivel medio de ruido detectado
+ */
+function ajustarVisualizacion(nivelRuido) {
+    const imagenEstado = document.getElementById('estado-imagen');
+    const textoEstado = document.getElementById('estado-texto');  // Elemento del texto del estado
+
+    // Cambiar imagen y texto según el nivel de ruido
+    if (nivelRuido < umbralEstable && estadoActualImagen !== 'estable') {
+        cambiarImagen(imagenEstado, imagenes.estable, 'estable');
+        textoEstado.innerText = 'Estado: Estable';  // Actualizar el texto del estado
+    } else if (nivelRuido >= umbralEstable && nivelRuido < umbralModerado && estadoActualImagen !== 'moderado') {
+        cambiarImagen(imagenEstado, imagenes.moderado, 'moderado');
+        textoEstado.innerText = 'Estado: Moderado';  // Actualizar el texto del estado
+    } else if (nivelRuido >= umbralModerado && estadoActualImagen !== 'alto') {
+        cambiarImagen(imagenEstado, imagenes.alto, 'alto');
+        textoEstado.innerText = 'Estado: Alto';  // Actualizar el texto del estado
+    }
+}
+
+/**
+ * Función para cambiar la imagen con una transición suave.
+ * @param {HTMLElement} imagenElemento - El elemento de la imagen que se va a cambiar
+ * @param {string} nuevaImagen - URL o base64 de la nueva imagen
+ * @param {string} nuevoEstado - El nuevo estado de la imagen para evitar recambios innecesarios
+ */
+function cambiarImagen(imagenElemento, nuevaImagen, nuevoEstado) {
+    imagenElemento.style.opacity = 0; // Inicia el fade out
+    setTimeout(() => {
+        imagenElemento.src = nuevaImagen; // Cambia la imagen
+        imagenElemento.style.opacity = 1; // Aplica el fade in
+        estadoActualImagen = nuevoEstado; // Actualiza el estado actual
+    }, 500); // Duración de la transición (coincide con la duración del fade)
+}
+
+/**
+ * Función para calcular el color de las barras de manera gradual.
+ * Se utiliza una interpolación lineal entre colores según el nivel de ruido.
+ * @param {number} nivelRuido - Nivel medio de ruido detectado
+ * @param {number} umbralEstable - Umbral de ruido para el estado "Estable"
+ * @param {number} umbralModerado - Umbral de ruido para el estado "Moderado"
+ * @param {number} umbralAlto - Umbral de ruido para el estado "Alto"
+ * @returns {string} - Color interpolado en formato RGB para las barras
+ */
+function calcularColorGradual(nivelRuido, umbralEstable, umbralModerado, umbralAlto) {
+    let colorInicial, colorFinal, porcentaje;
+
+    if (nivelRuido < umbralEstable) {
+        // Estado "Estable" - Verde
+        colorInicial = [0, 255, 0]; // Verde
+        colorFinal = [0, 255, 0];   // Mantiene verde para nivel bajo
+        porcentaje = 0;  // Sin interpolación
+    } else if (nivelRuido >= umbralEstable && nivelRuido < umbralModerado) {
+        // Estado "Moderado" - Interpolación de Verde a Amarillo
+        colorInicial = [0, 255, 0];   // Verde
+        colorFinal = [255, 255, 0];   // Amarillo
+        porcentaje = (nivelRuido - umbralEstable) / (umbralModerado - umbralEstable);
+    } else {
+        // Estado "Alto" - Interpolación de Amarillo a Rojo
+        colorInicial = [255, 255, 0]; // Amarillo
+        colorFinal = [255, 0, 0];     // Rojo
+        porcentaje = (nivelRuido - umbralModerado) / (umbralAlto - umbralModerado); // Corrección en el rango de interpolación
+    }
+
+    // Interpolar entre los dos colores
+    const colorInterpolado = colorInicial.map((inicio, index) => {
+        const final = colorFinal[index];
+        return Math.round(inicio + (final - inicio) * porcentaje);
+    });
+
+    // Convertir a formato RGB
+    return `rgb(${colorInterpolado[0]}, ${colorInterpolado[1]}, ${colorInterpolado[2]})`;
 }
