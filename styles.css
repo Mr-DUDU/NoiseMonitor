@@ -1,35 +1,79 @@
+
+header, footer {
+  background-color: #276db3; /* Color más suave para el fondo */
+  color: white; /* Contraste con el texto en blanco */
+}
+
 header {
-    height: 15vh; /* 15% de la altura de la vista */
-    background-color: #f8f9fa;
-  }
+  height: 15vh; /* 15% de la altura de la vista */
+}
 
-  footer {
-    height: 10vh; /* 10% de la altura de la vista */
-    background-color: #f8f9fa;
-  }
+header h1 {
+  font-size: 2rem; /* Tamaño de fuente para el título */
+  margin: 0;
+}
 
-  section {
-    height: 75vh; /* 75% de la altura de la vista */
-    background-color: #e9ecef;
-  }
+header img {
+  cursor: pointer; /* Indicar que la imagen es clicable */
+  border-radius: 50px; /* Esquinas redondeadas para la imagen */
+}
 
-  #visualizador {
-    width: 100%;  /* Ancho total del div padre */
-    height: 80%;  /* Altura ajustada al 80% del div padre */
-    border: 1px solid #333;  /* Borde del canvas */
-    background-color: white; /* Fondo blanco */
-    border-radius: 10px; /* Esquinas redondeadas */
-  }
+header span {
+  font-size: 0.8rem; /* Tamaño pequeño para el texto del copyright */
+  align-self: flex-end; /* Alinear el texto a la parte inferior */
+}
 
-  /* Asegurar que el div contenedor tenga suficiente altura */
-  .canvas-container {
-    height: 70vh; /* Ajuste de altura del div contenedor */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Espacio adecuado entre el título y el canvas */
-  }
+footer {
+  height: 10vh; /* 10% de la altura de la vista */
+}
 
-  /* Transición suave para las imágenes */
-    #estado-imagen {
-        transition: opacity 0.5s ease-in-out;
-    }
+footer p {
+  margin: 0;
+  font-size: 1rem; /* Tamaño de fuente moderado */
+}
+
+section {
+  height: 75vh; /* 75% de la altura de la vista */
+  background-color: #e9ecef;
+}
+
+#visualizador {
+  width: 100%; /* Ancho total del div padre */
+  height: 80%; /* Altura ajustada al 80% del div padre */
+  border: 1px solid #007bff; /* Borde del canvas */
+  background-color: white; /* Fondo blanco */
+  border-radius: 10px; /* Esquinas redondeadas */
+}
+
+/* Asegurar que el div contenedor tenga suficiente altura */
+.canvas-container {
+  height: 70vh; /* Ajuste de altura del div contenedor */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Espacio adecuado entre el título y el canvas */
+}
+
+/* Transición suave para las imágenes */
+#estado-imagen {
+  transition: opacity 0.5s ease-in-out;
+}
+
+input[type="range"] {
+  width: 100%;
+  height: 8px;
+  background-color: #ddd;
+  border-radius: 5px;
+  outline: none;
+  -webkit-appearance: none; /* Para navegadores WebKit (Chrome, Safari) */
+  appearance: none; /* Propiedad estándar para otros navegadores */
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #007bff;
+  cursor: pointer;
+  border-radius: 50%;
+}

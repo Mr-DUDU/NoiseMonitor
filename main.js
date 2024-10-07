@@ -3,10 +3,30 @@
 //Author: David Averos
 //Last update: 2024-10-07
 
-// Variables globales para los umbrales de ruido (ajustados para un entorno silencioso)
+// Variables globales para los umbrales de ruido
 let umbralEstable = 20;    // Umbral máximo para "Estable"
-let umbralModerado = 50;   // Umbral máximo para "Moderado"
-let umbralAlto = 70;       // Umbral mínimo para "Alto"
+let umbralModerado = umbralEstable + 30;   // Umbral máximo para "Moderado"
+let umbralAlto = umbralModerado + 30;       // Umbral mínimo para "Alto"
+
+// Función para actualizar el valor del umbral estable en tiempo real y ajustar los otros umbrales
+function actualizarUmbral(tipo, valor) {
+    if (tipo === 'estable') {
+        document.getElementById('valorEstable').innerText = valor;
+        umbralEstable = parseInt(valor);
+        
+        // Ajustar automáticamente los otros umbrales
+        umbralModerado = umbralEstable + 30;
+        umbralAlto = umbralModerado + 30;
+        
+        console.log('Umbrales ajustados: Estable:', umbralEstable, 'Moderado:', umbralModerado, 'Alto:', umbralAlto);
+    }
+}
+
+// Función para guardar los cambios
+function guardarCalibracion() {
+    alert('Umbrales actualizados: Estable: ' + umbralEstable + ' dB, Moderado: ' + umbralModerado + ' dB, Alto: ' + umbralAlto + ' dB');
+}
+
 
 // Variables de imágenes para los diferentes estados
 const imagenes = {
