@@ -117,13 +117,13 @@ function ajustarVisualizacion(nivelRuido) {
     // Cambiar imagen y texto según el nivel de ruido
     if (nivelRuido < umbralEstable && estadoActualImagen !== 'estable') {
         cambiarImagen(imagenEstado, imagenes.estable, 'estable');
-        textoEstado.innerText = 'Estado: Estable';  // Actualizar el texto del estado
+        textoEstado.innerText = 'Estable';  // Actualizar el texto del estado
     } else if (nivelRuido >= umbralEstable && nivelRuido < umbralModerado && estadoActualImagen !== 'moderado') {
         cambiarImagen(imagenEstado, imagenes.moderado, 'moderado');
-        textoEstado.innerText = 'Estado: Moderado';  // Actualizar el texto del estado
+        textoEstado.innerText = 'Moderado';  // Actualizar el texto del estado
     } else if (nivelRuido >= umbralModerado && estadoActualImagen !== 'alto') {
         cambiarImagen(imagenEstado, imagenes.alto, 'alto');
-        textoEstado.innerText = 'Estado: Alto';  // Actualizar el texto del estado
+        textoEstado.innerText = 'Alto';  // Actualizar el texto del estado
     }
 }
 
