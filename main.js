@@ -28,12 +28,12 @@ function guardarCalibracion() {
 }
 
 
-// Variables de imágenes para los diferentes estados
+// Rutas de imágenes para diferentes estados de ruido
 const imagenes = {
-    estable: "https://static.vecteezy.com/system/resources/previews/013/453/453/non_2x/number-1-3d-gold-one-free-png.png",
-    moderado: "https://static.vecteezy.com/system/resources/thumbnails/022/502/925/small/number-2-pink-alphabet-glossy-png.png",
-    alto: "https://static.thenounproject.com/png/77879-200.png"  // Reutilizamos esta imagen para el nivel "Alto"
-};
+    estable: "/resources/estable.png",
+    moderado: "/resources/moderado.png",
+    alto: "/resources/alto.png"
+  };
 
 // Variable para controlar el estado actual de la imagen para evitar recambios innecesarios
 let estadoActualImagen = 'estable';

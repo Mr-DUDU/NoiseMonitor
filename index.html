@@ -20,17 +20,17 @@
         <img
           src="https://static.vecteezy.com/system/resources/thumbnails/013/760/641/small/ecuador-circle-flag-png.png"
           alt="Logo"
-          style="width: 60px; height: 60px;"
+          style="width: 60px; height: 60px"
         />
       </a>
       <h1 class="p-3 flex-grow-1">Monitor de ruido</h1>
-      <span class="text-muted"
-        >&copy; 2024 Ministerio de Educación del Ecuador</span
-      >
+      <span class="p-3">Ministerio de Educación del Ecuador</span>
     </header>
 
     <!-- Section -->
-    <section class="d-flex align-items-center justify-content-center bg-body-secondary">
+    <section
+      class="d-flex align-items-center justify-content-center bg-body-secondary"
+    >
       <div class="container text-center">
         <div class="row border">
           <!-- Monitor -->
@@ -44,12 +44,14 @@
           <div class="card col-4 border border-1 border-primary">
             <img
               id="estado-imagen"
-              src="https://static.thenounproject.com/png/77879-200.png"
+              src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
               class="card-img-top"
               alt="Estado del ruido"
             />
             <div class="card-body">
-              <h5 id="estado-texto" class="card-title text-primary-emphasis">Estado: Moderado</h5>
+              <h5 id="estado-texto" class="card-title text-primary-emphasis">
+                Estado: Moderado
+              </h5>
               <!-- Calibración -->
               <!-- Modal para Calibración -->
               <div
@@ -61,7 +63,7 @@
               >
                 <div class="modal-dialog">
                   <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-warning">
                       <h5 class="modal-title" id="modalCalibracionLabel">
                         Calibrar Umbral Estable
                       </h5>
@@ -91,6 +93,7 @@
                         </p>
                       </div>
                     </div>
+                    <!-- Footer del Modal con botones de acción -->
                     <div class="modal-footer">
                       <button
                         type="button"
@@ -101,7 +104,7 @@
                       </button>
                       <button
                         type="button"
-                        class="btn btn-outline-warning"
+                        class="btn btn-warning"
                         onclick="guardarCalibracion()"
                       >
                         Guardar Cambios
@@ -127,11 +130,28 @@
 
     <!-- Footer -->
     <footer class="d-flex align-items-center justify-content-center">
-        <p class="text-center">
-          &copy; 2024 Dirección Nacional de Tecnologías para la Educación <br>
-          Desarrollado por: David Averos (MrDUDU)
-        </p>
-      </footer>      
+      <p class="text-center m-0 d-flex align-items-center">
+        &copy; 2024 Dirección Nacional de Tecnologías para la Educación
+        <br />
+        Desarrollado por: David Averos (MrDUDU)
+      </p>
+      <span
+        class="mx-3"
+        style="border-left: 1px solid #d3d3d3; height: 50%"
+      ></span>
+      <small class="text-center">
+        <a
+          href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-light"
+          style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7) !important"
+        >
+          Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+          International
+        </a>
+      </small>
+    </footer>
 
     <!-- Scripts -->
     <script src="main.js"></script>
