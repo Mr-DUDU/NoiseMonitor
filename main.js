@@ -13,20 +13,24 @@ function actualizarUmbral(tipo, valor) {
     if (tipo === 'estable') {
         document.getElementById('valorEstable').innerText = valor;
         umbralEstable = parseInt(valor);
-        
+
         // Ajustar automáticamente los otros umbrales
         umbralModerado = umbralEstable + 30;
         umbralAlto = umbralModerado + 30;
-        
+
+        // Actualizar los rangos de los umbrales en el modal
+        document.getElementById('rangoEstable').innerText = `${umbralEstable} - ${umbralEstable + 40}`;
+        document.getElementById('rangoModerado').innerText = `${umbralEstable + 41} - ${umbralModerado}`;
+        document.getElementById('rangoAlto').innerText = `${umbralModerado + 1} - ${umbralAlto}`;
+
         console.log('Umbrales ajustados: Estable:', umbralEstable, 'Moderado:', umbralModerado, 'Alto:', umbralAlto);
     }
 }
 
 // Función para guardar los cambios
 function guardarCalibracion() {
-    alert('Umbrales actualizados: Estable: ' + umbralEstable + ' dB, Moderado: ' + umbralModerado + ' dB, Alto: ' + umbralAlto + ' dB');
+    alert('Los umbrales se han actualizado correctamente.');
 }
-
 
 // Rutas de imágenes para diferentes estados de ruido
 const imagenes = {
