@@ -11,42 +11,49 @@ header {
   /* 15% de la altura de la vista */
 }
 
+/* Estilos responsivos para el título del header */
 header h1 {
-  font-size: 2rem;
-  /* Tamaño de fuente para el título */
+  font-size: clamp(1.5rem, 4vw, 3rem); /* Ajuste dinámico del tamaño del título */
   margin: 0;
 }
 
-header img {
-  cursor: pointer;
-  /* Indicar que la imagen es clicable */
-  border-radius: 50px;
-  /* Esquinas redondeadas para la imagen */
+/* Estilos responsivos para el span del header */
+header span {
+  font-size: clamp(0.8rem, 2vw, 1.5rem); /* Ajuste dinámico del tamaño del texto del span */
 }
 
-header span {
-  font-size: 0.8rem;
-  /* Tamaño pequeño para el texto del copyright */
-  align-self: flex-end;
-  /* Alinear el texto a la parte inferior */
+
+/* Estilo responsivo para la imagen del header */
+header img {
+  width: auto; /* Mantener las proporciones de la imagen */
+  height: 13vh; /* La imagen ocupará el 80% de la altura del header */
+  max-height: 13vh; /* Asegura que no exceda el 80% de la altura del header */
+  object-fit: contain; /* Mantiene la imagen dentro de sus proporciones originales */
 }
+
 
 footer {
   height: 10vh;
   /* 10% de la altura de la vista */
 }
 
-footer p {
-  margin: 0;
-  font-size: 1rem;
-  /* Tamaño de fuente moderado */
-}
+/* Estilos para el texto del footer para que sea responsive */
+
 
 section {
   height: 75vh;
   /* 75% de la altura de la vista */
   background-color: #e9ecef;
 }
+
+/* Ajuste responsivo para el contenedor de la tarjeta */
+.card {
+  max-height: 70vh; /* Mantener la altura máxima en 70% del viewport */
+
+  display: flex;
+  flex-direction: column;
+}
+
 
 /* Ajuste de los títulos dentro de la sección de estado */
 .titulo-estado {
@@ -82,6 +89,7 @@ section {
 /* Estilo para la imagen en la sección de estado */
 #estado-imagen {
   max-height: 100%; /* Asegura que la imagen ocupe el espacio máximo dentro de su bloque sin distorsionarse */
+  transition: opacity 0.5s ease-in-out; 
   width: auto; /* Mantiene el ancho automático para mantener proporciones */
   object-fit: contain; /* Evita que la imagen se distorsione */
 }
@@ -113,3 +121,4 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   border-radius: 50%;
 }
+

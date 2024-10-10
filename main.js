@@ -184,3 +184,18 @@ function calcularColorGradual(nivelRuido, umbralEstable, umbralModerado, umbralA
     // Convertir a formato RGB
     return `rgb(${colorInterpolado[0]}, ${colorInterpolado[1]}, ${colorInterpolado[2]})`;
 }
+
+// Detectar la orientación de la pantalla y forzar a horizontal
+function forzarOrientacionHorizontal() {
+    if (window.innerHeight > window.innerWidth) {
+      document.body.classList.add('forzar-horizontal');
+      alert('Por favor, gira tu dispositivo para usar la aplicación en modo horizontal.');
+    } else {
+      document.body.classList.remove('forzar-horizontal');
+    }
+  }
+  
+  // Llama a la función cuando se cargue la página y cada vez que cambie la orientación del dispositivo
+  window.addEventListener('load', forzarOrientacionHorizontal);
+  window.addEventListener('resize', forzarOrientacionHorizontal);
+  
