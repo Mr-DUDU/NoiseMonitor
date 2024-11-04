@@ -1,131 +1,247 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Monitor de Ruido en el Aula</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap JS y Popper.js para la funcionalidad del modal -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Monitor de Ruido en el Aula</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <!-- Bootstrap JS y Popper.js para la funcionalidad del modal -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</head>
+  <body>
+    <!-- Header -->
+    <header class="d-flex align-items-center justify-content-between px-4">
+      <a href="#" onclick="location.reload();">
+        <img
+          src="https://static.vecteezy.com/system/resources/thumbnails/013/760/641/small/ecuador-circle-flag-png.png"
+          alt="Logo"
+        />
+      </a>
+      <h1 class="p-3 flex-grow-1">Monitor de ruido</h1>
+      <span class="p-3">Ministerio de Educación</span>
+    </header>
 
-<body>
-  <!-- Header -->
-  <header class="d-flex align-items-center justify-content-between px-4">
-    <a href="#" onclick="location.reload();">
-      <img src="https://static.vecteezy.com/system/resources/thumbnails/013/760/641/small/ecuador-circle-flag-png.png"
-        alt="Logo" />
-    </a>
-    <h1 class="p-3 flex-grow-1">Monitor de ruido</h1>
-    <span class="p-3">Ministerio de Educación</span>
-  </header>
-
-  <!-- Section -->
-  <section class="d-flex align-items-center justify-content-center bg-body-secondary">
-    <div class="container text-center">
-      <div class="row border">
-
-        <!-- Monitor -->
-        <div class="col-8 canvas-container ">
-          <!-- Canvas con fondo blanco y esquinas redondeadas -->
-          <canvas id="visualizador"></canvas>
-        </div>
-
-        <!-- Sección imágen y configuración -->
-        <div class="card col-4 bg-body-secondary d-flex flex-column justify-content-between" style="height: 70vh;">
-          <!-- Bloque de Título del estado (20% del contenedor) -->
-          <div class="d-flex align-items-center justify-content-center p-3" style="height: 20%;">
-            <h1 class="titulo-estado">Estado:</h1>
-            <h1 id="estado-texto" class="titulo-estado ms-2">Silencioso</h1>
+    <!-- Section -->
+    <section
+      class="d-flex align-items-center justify-content-center bg-body-secondary"
+    >
+      <div class="container text-center">
+        <div class="row border">
+          <!-- Monitor -->
+          <div class="col-8 canvas-container">
+            <!-- Canvas con fondo blanco y esquinas redondeadas -->
+            <canvas id="visualizador"></canvas>
           </div>
 
-          <!-- Bloque de Imagen (70% del contenedor) -->
-          <div class="d-flex justify-content-center align-items-center" style="height: 40vh;">
-            <img id="estado-imagen" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
-              alt="Estado del ruido" style="max-height: 100%; width: auto; object-fit: contain;" />
+          <!-- Sección imágen y configuración -->
+          <div
+            class="card col-4 bg-body-secondary d-flex flex-column justify-content-between"
+            style="height: 70vh"
+          >
+            <!-- Bloque de Título del estado (20% del contenedor) -->
+            <div
+              class="d-flex align-items-center justify-content-center p-3"
+              style="height: 20%"
+            >
+              <h1 class="titulo-estado">Estado:</h1>
+              <h1 id="estado-texto" class="titulo-estado ms-2">Silencioso</h1>
+            </div>
+
+            <!-- Bloque de Imagen (70% del contenedor) -->
+            <div
+              class="d-flex justify-content-center align-items-center"
+              style="height: 40vh"
+            >
+              <img
+                id="estado-imagen"
+                src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
+                alt="Estado del ruido"
+                style="max-height: 100%; width: auto; object-fit: contain"
+              />
+            </div>
+
+            <!-- Bloque del Botón para abrir el modal (10% del contenedor) -->
+            <div
+              class="d-flex justify-content-center align-items-center"
+              style="height: 10vh"
+            >
+              <button
+                class="btn btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#modalCalibracion"
+              >
+                Calibrar ruido
+              </button>
+            </div>
           </div>
 
-          <!-- Bloque del Botón para abrir el modal (10% del contenedor) -->
-          <div class="d-flex justify-content-center align-items-center" style="height: 10vh;">
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalCalibracion">Calibrar
-              ruido</button>
-          </div>
-        </div>
-
-        <!-- Modal para Calibración -->
-        <div class="modal fade" id="modalCalibracion" tabindex="-1" aria-labelledby="modalCalibracionLabel"
-          aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header bg-warning">
-                <h5 class="modal-title" id="modalCalibracionLabel">Calibrar Umbral Estable</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="form-group">
-                  <label for="sliderEstable">Ruido Estable (20-60 dB)</label>
-                  <input type="range" id="sliderEstable" min="20" max="60" value="20" class="form-range"
-                    oninput="actualizarUmbral('estable', this.value)" />
-                  <p>Valor actual: <span id="valorEstable">20</span> dB</p>
+          <!-- Modal para Calibración -->
+          <div
+            class="modal fade"
+            id="modalCalibracion"
+            tabindex="-1"
+            aria-labelledby="modalCalibracionLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header bg-warning">
+                  <h5 class="modal-title" id="modalCalibracionLabel">
+                    Calibrar Umbral Estable
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
                 </div>
-                <div class="mt-3">
-                  <h6>Rangos de Umbrales:</h6>
-                  <ul>
-                    <li>Estable: <span id="rangoEstable">20 - 60</span> dB</li>
-                    <li>Moderado: <span id="rangoModerado">61 - 90</span> dB</li>
-                    <li>Alto: <span id="rangoAlto">91 - 120</span> dB</li>
-                  </ul>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="sliderEstable">Ruido Estable (20-60 dB)</label>
+                    <input
+                      type="range"
+                      id="sliderEstable"
+                      min="20"
+                      max="60"
+                      value="20"
+                      class="form-range"
+                      oninput="actualizarUmbral('estable', this.value)"
+                    />
+                    <p>Valor actual: <span id="valorEstable">20</span> dB</p>
+                  </div>
+                  <div class="mt-3">
+                    <h6>Rangos de Umbrales:</h6>
+                    <ul>
+                      <li>
+                        Estable: <span id="rangoEstable">20 - 60</span> dB
+                      </li>
+                      <li>
+                        Moderado: <span id="rangoModerado">61 - 90</span> dB
+                      </li>
+                      <li>Alto: <span id="rangoAlto">91 - 120</span> dB</li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-warning" onclick="guardarCalibracion()">Guardar Cambios</button>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cerrar
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    onclick="guardarCalibracion()"
+                  >
+                    Guardar Cambios
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="d-flex align-items-center justify-content-center">
-    <p class="text-center m-0 d-flex align-items-center">
-      &copy; 2024 Dirección Nacional de Tecnologías para la Educación | Desarrollado por: David Averos (MrDUDU)
-    </p>
-    <span class="mx-3" style="border-left: 1px solid #d3d3d3; height: 50%"></span>
+    <!-- Footer -->
+    <footer class="d-flex align-items-center justify-content-center">
+      <p class="text-center m-0 d-flex align-items-center">
+        &copy; 2024 Dirección Nacional de Tecnologías para la Educación |
+        Desarrollado por: David Averos (MrDUDU)
+      </p>
+      <span
+        class="mx-3"
+        style="border-left: 1px solid #d3d3d3; height: 50%"
+      ></span>
 
-    <small class="text-center d-flex align-items-center">
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank"
-        rel="noopener noreferrer" class="text-light"
-        style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7) !important; display: flex; align-items: center;">
-        Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
-        <span class="d-flex align-items-center ms-2">
-          <!-- Íconos de Creative Commons -->
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px;">
-            <image href="https://mirrors.creativecommons.org/presskit/icons/cc.svg" width="24" height="24" />
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px;">
-            <image href="https://mirrors.creativecommons.org/presskit/icons/by.svg" width="24" height="24" />
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px;">
-            <image href="https://mirrors.creativecommons.org/presskit/icons/nc.svg" width="24" height="24" />
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px;">
-            <image href="https://mirrors.creativecommons.org/presskit/icons/sa.svg" width="24" height="24" />
-          </svg>
-        </span>
-      </a>
-    </small>
-  </footer>
+      <small class="text-center d-flex align-items-center">
+        <a
+          href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-light"
+          style="
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7) !important;
+            display: flex;
+            align-items: center;
+          "
+        >
+          Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+          International
+          <span class="d-flex align-items-center ms-2">
+            <!-- Íconos de Creative Commons -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              style="margin-left: 5px"
+            >
+              <image
+                href="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
+                width="24"
+                height="24"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              style="margin-left: 5px"
+            >
+              <image
+                href="https://mirrors.creativecommons.org/presskit/icons/by.svg"
+                width="24"
+                height="24"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              style="margin-left: 5px"
+            >
+              <image
+                href="https://mirrors.creativecommons.org/presskit/icons/nc.svg"
+                width="24"
+                height="24"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              style="margin-left: 5px"
+            >
+              <image
+                href="https://mirrors.creativecommons.org/presskit/icons/sa.svg"
+                width="24"
+                height="24"
+              />
+            </svg>
+          </span>
+        </a>
+      </small>
+    </footer>
 
-  <!-- Scripts -->
-  <script src="main.js"></script>
-  <!-- Bootstrap JS y Popper.js para la funcionalidad del modal -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
+    <!-- Scripts -->
+    <script src="src/configuracionSonido.js" type="module"></script>
+    <script src="src/router.js" type="module"></script>
 
+    <!-- Bootstrap JS y Popper.js para la funcionalidad del modal -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  </body>
 </html>
