@@ -1,0 +1,36 @@
+"use strict";
+
+// Mostrar el modal al inicio de la aplicación
+window.onload = function() {
+  const modalDefinirMeta = new bootstrap.Modal(document.getElementById('modalDefinirMeta'));
+  modalDefinirMeta.show();
+};
+
+// Actualizar el valor mostrado según el slider
+const duracionMetaInput = document.getElementById('duracionMeta');
+const valorDuracionMeta = document.getElementById('valorDuracionMeta');
+duracionMetaInput.addEventListener('input', function() {
+  valorDuracionMeta.textContent = duracionMetaInput.value;
+});
+
+// Manejar el evento del botón "Guardar Meta"
+const guardarMetaBtn = document.getElementById('guardarMetaBtn');
+guardarMetaBtn.addEventListener('click', function() {
+  const duracionSeleccionada = parseInt(duracionMetaInput.value);
+  console.log(`Duración de la meta seleccionada: ${duracionSeleccionada} minutos`);
+
+  // Aquí puedes llamar a la función para iniciar la meta con la duración seleccionada
+  iniciarSesionMeta(duracionSeleccionada);
+
+  // Cerrar el modal
+  const modalDefinirMeta = bootstrap.Modal.getInstance(document.getElementById('modalDefinirMeta'));
+  modalDefinirMeta.hide();
+});
+
+// Función para iniciar la meta con la duración seleccionada
+function iniciarSesionMeta(duracion) {
+  console.log(`Iniciando sesión de meta con duración de ${duracion} minutos.`);
+  // Aquí puedes agregar la lógica para iniciar el temporizador y manejar el progreso de la meta
+}
+
+export { iniciarSesionMeta };

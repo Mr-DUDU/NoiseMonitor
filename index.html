@@ -1,247 +1,223 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Monitor de Ruido en el Aula</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Bootstrap JS y Popper.js para la funcionalidad del modal -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-  </head>
 
-  <body>
-    <!-- Header -->
-    <header class="d-flex align-items-center justify-content-between px-4">
-      <a href="#" onclick="location.reload();">
-        <img
-          src="https://static.vecteezy.com/system/resources/thumbnails/013/760/641/small/ecuador-circle-flag-png.png"
-          alt="Logo"
-        />
-      </a>
-      <h1 class="p-3 flex-grow-1">Monitor de ruido</h1>
-      <span class="p-3">Ministerio de Educación</span>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Section -->
-    <section
-      class="d-flex align-items-center justify-content-center bg-body-secondary"
-    >
-      <div class="container text-center">
-        <div class="row border">
-          <!-- Monitor -->
-          <div class="col-8 canvas-container">
-            <!-- Canvas con fondo blanco y esquinas redondeadas -->
-            <canvas id="visualizador"></canvas>
+  <!-- Título de la página -->
+  <title>Monitor de Ruido en el Aula</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- FontAwesome (sin atributos de integridad) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+</head>
+
+
+<body>
+  <!-- Header (10% height) -->
+  <header class="header d-flex align-items-center justify-content-between px-4">
+    <!-- Botón para abrir el offcanvas (panel de configuraciones) -->
+    <button class="menu-btn me-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#panelConfiguracion"
+      aria-controls="panelConfiguracion">
+      <i class="fa-solid fa-bars fa-2xs"></i>
+    </button>
+
+    <!-- Texto de estado -->
+    <div class="estado-ruido d-flex align-items-center">
+      <h1 class="titulo-estado">Estado:</h1>
+      <div class="estado-detalle ms-2 d-flex align-items-center">
+        <h1 id="estado-texto" class="titulo-estado me-2">Silencioso</h1>
+        <span id="estado-decibeles" class="decibeles-texto">90 dB</span>
+      </div>
+    </div>
+
+    <!-- Botón de logros -->
+    <button class="btn btn-outline-secondary icono-logros" type="button">
+      <img src="https://uxwing.com/wp-content/themes/uxwing/download/sport-and-awards/achievement-award-medal-icon.svg"
+        alt="Logros" style="width: 24px; height: 24px;" />
+    </button>
+  </header>
+
+  <!-- Offcanvas del Panel de Configuración -->
+  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="panelConfiguracion"
+    aria-labelledby="panelConfiguracionLabel">
+    <div class="offcanvas-header m-2">
+      <h5 class="offcanvas-title" id="panelConfiguracionLabel">Panel de configuración</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- Botones del panel -->
+      <button class="icono-contenedor" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEscenarios"
+        aria-controls="offcanvasEscenarios">
+        <i class="fa-solid fa-theater-masks fa-2x"></i>
+        <p>Escenario</p>
+      </button>
+      <button class="icono-contenedor" type="button" data-bs-toggle="modal" data-bs-target="#modalCalibracion">
+        <i class="fa-solid fa-cog fa-2x"></i>
+        <p>Calibrar sensibilidad del micrófono</p>
+      </button>
+      <button class="icono-contenedor" type="button" id="expandirPantallaBtn">
+        <i class="fa-solid fa-expand-arrows-alt fa-2x"></i>
+        <p>Expandir pantalla</p>
+      </button>
+    </div>
+  </div>
+
+  <!-- Offcanvas para Seleccionar Escenarios -->
+  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasEscenarios"
+    aria-labelledby="offcanvasEscenariosLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasEscenariosLabel">Seleccionar Escenario</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action" onclick="cambiarEscenario('barras')">Barras
+          de Sonido</button>
+        <button type="button" class="list-group-item list-group-item-action"
+          onclick="cambiarEscenario('infantil')">Escenario Infantil</button>
+        <button type="button" class="list-group-item list-group-item-action"
+          onclick="cambiarEscenario('medio')">Escenario Medio</button>
+      </div>
+    </div>
+  </div>
+  <!-- Section de Gamificación -->
+  <!-- Modal para Definir la Meta (Sesión) -->
+  <div class="modal fade" id="modalDefinirMeta" tabindex="-1" aria-labelledby="modalDefinirMetaLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-info">
+          <h5 class="modal-title" id="modalDefinirMetaLabel">Definir Meta de Silencio</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="duracionMeta" class="form-label">Selecciona la duración de la meta (en minutos):</label>
+          <input type="range" class="form-range" id="duracionMeta" min="5" max="60" step="5" value="5">
+          <p>Duración seleccionada: <span id="valorDuracionMeta">5</span> minutos</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="guardarMetaBtn">Guardar Meta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Section Central-->
+  <section class="d-flex align-items-center justify-content-center">
+    <div class="container text-center">
+      <div class="row border">
+        <!-- Monitor -->
+        <div class="col-8 canvas-container">
+          <!-- Canvas -->
+          <canvas id="visualizador"></canvas>
+        </div>
+        <!-- Sección de imagen y configuración -->
+        <div class="card col-4 d-flex flex-column justify-content-between" style="height: 70vh">
+          <!-- Bloque de Imagen -->
+          <div class="d-flex justify-content-center align-items-center" style="height: 40vh">
+            <img id="estado-imagen" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
+              alt="Estado del ruido" style="max-height: 100%; width: auto; object-fit: contain" />
           </div>
-
-          <!-- Sección imágen y configuración -->
-          <div
-            class="card col-4 bg-body-secondary d-flex flex-column justify-content-between"
-            style="height: 70vh"
-          >
-            <!-- Bloque de Título del estado (20% del contenedor) -->
-            <div
-              class="d-flex align-items-center justify-content-center p-3"
-              style="height: 20%"
-            >
-              <h1 class="titulo-estado">Estado:</h1>
-              <h1 id="estado-texto" class="titulo-estado ms-2">Silencioso</h1>
-            </div>
-
-            <!-- Bloque de Imagen (70% del contenedor) -->
-            <div
-              class="d-flex justify-content-center align-items-center"
-              style="height: 40vh"
-            >
-              <img
-                id="estado-imagen"
-                src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
-                alt="Estado del ruido"
-                style="max-height: 100%; width: auto; object-fit: contain"
-              />
-            </div>
-
-            <!-- Bloque del Botón para abrir el modal (10% del contenedor) -->
-            <div
-              class="d-flex justify-content-center align-items-center"
-              style="height: 10vh"
-            >
-              <button
-                class="btn btn-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#modalCalibracion"
-              >
-                Calibrar ruido
-              </button>
-            </div>
-          </div>
-
-          <!-- Modal para Calibración -->
-          <div
-            class="modal fade"
-            id="modalCalibracion"
-            tabindex="-1"
-            aria-labelledby="modalCalibracionLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header bg-warning">
-                  <h5 class="modal-title" id="modalCalibracionLabel">
-                    Calibrar Umbral Estable
-                  </h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
+        </div>
+        <!-- Modal para Calibración -->
+        <div class="modal fade" id="modalCalibracion" tabindex="-1" aria-labelledby="modalCalibracionLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="modalCalibracionLabel">Calibrar Umbral Estable</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="sliderEstable">Ruido Estable (20-60 dB)</label>
+                  <input type="range" id="sliderEstable" min="20" max="60" value="20" class="form-range"
+                    oninput="actualizarUmbral('estable', this.value)" />
+                  <p>Valor actual: <span id="valorEstable">20</span> dB</p>
                 </div>
-                <div class="modal-body">
-                  <div class="form-group">
-                    <label for="sliderEstable">Ruido Estable (20-60 dB)</label>
-                    <input
-                      type="range"
-                      id="sliderEstable"
-                      min="20"
-                      max="60"
-                      value="20"
-                      class="form-range"
-                      oninput="actualizarUmbral('estable', this.value)"
-                    />
-                    <p>Valor actual: <span id="valorEstable">20</span> dB</p>
-                  </div>
-                  <div class="mt-3">
-                    <h6>Rangos de Umbrales:</h6>
-                    <ul>
-                      <li>
-                        Estable: <span id="rangoEstable">20 - 60</span> dB
-                      </li>
-                      <li>
-                        Moderado: <span id="rangoModerado">61 - 90</span> dB
-                      </li>
-                      <li>Alto: <span id="rangoAlto">91 - 120</span> dB</li>
-                    </ul>
-                  </div>
+                <div class="mt-3">
+                  <h6>Rangos de Umbrales:</h6>
+                  <ul>
+                    <li>Estable: <span id="rangoEstable">20 - 60</span> dB</li>
+                    <li>Moderado: <span id="rangoModerado">61 - 90</span> dB</li>
+                    <li>Alto: <span id="rangoAlto">91 - 120</span> dB</li>
+                  </ul>
                 </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Cerrar
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-warning"
-                    onclick="guardarCalibracion()"
-                  >
-                    Guardar Cambios
-                  </button>
-                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-warning" onclick="guardarCalibracion()">Guardar Cambios</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="d-flex align-items-center justify-content-center">
-      <p class="text-center m-0 d-flex align-items-center">
-        &copy; 2024 Dirección Nacional de Tecnologías para la Educación |
-        Desarrollado por: David Averos (MrDUDU)
-      </p>
-      <span
-        class="mx-3"
-        style="border-left: 1px solid #d3d3d3; height: 50%"
-      ></span>
 
-      <small class="text-center d-flex align-items-center">
-        <a
-          href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-light"
-          style="
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7) !important;
-            display: flex;
-            align-items: center;
-          "
-        >
-          Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-          International
-          <span class="d-flex align-items-center ms-2">
-            <!-- Íconos de Creative Commons -->
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              style="margin-left: 5px"
-            >
-              <image
-                href="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              style="margin-left: 5px"
-            >
-              <image
-                href="https://mirrors.creativecommons.org/presskit/icons/by.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              style="margin-left: 5px"
-            >
-              <image
-                href="https://mirrors.creativecommons.org/presskit/icons/nc.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              style="margin-left: 5px"
-            >
-              <image
-                href="https://mirrors.creativecommons.org/presskit/icons/sa.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-          </span>
-        </a>
-      </small>
-    </footer>
+  <!-- Footer -->
+  <footer class="d-flex align-items-center justify-content-center">
+    <p class="text-center m-0 d-flex align-items-center">
+      &copy; 2024 Dirección Nacional de Tecnologías para la Educación | Desarrollado por: David Averos
+    </p>
+    <span class="mx-3" style="border-left: 1px solid #d3d3d3; height: 50%"></span>
+    <small class="text-center d-flex align-items-center">
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank"
+        rel="noopener noreferrer" class="text-light"
+        style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7) !important; display: flex; align-items: center;">
+        Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+        <span class="d-flex align-items-center ms-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px">
+            <image href="https://mirrors.creativecommons.org/presskit/icons/cc.svg" width="24" height="24" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px">
+            <image href="https://mirrors.creativecommons.org/presskit/icons/by.svg" width="24" height="24" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px">
+            <image href="https://mirrors.creativecommons.org/presskit/icons/nc.svg" width="24" height="24" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px">
+            <image href="https://mirrors.creativecommons.org/presskit/icons/sa.svg" width="24" height="24" />
+          </svg>
+        </span>
+      </a>
+    </small>
+  </footer>
 
-    <!-- Scripts -->
-    <script src="src/configuracionSonido.js" type="module"></script>
-    <script src="src/router.js" type="module"></script>
 
-    <!-- Bootstrap JS y Popper.js para la funcionalidad del modal -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-  </body>
+  <!-- Scripts -->
+  <script src="src/configuracionSonido.js" type="module"></script>
+  <script src="src/router.js" type="module"></script>
+  <script>
+    document.getElementById('expandirPantallaBtn').addEventListener('click', function () {
+      toggleFullScreen();
+    });
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch((err) => {
+          alert(`Error al intentar entrar en modo de pantalla completa: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  </script>
+  <!-- Bootstrap JS y Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Gamificación -->
+  <script src="src/gamificacion/gamificacion.js" type="module"></script>
+</body>
+
 </html>

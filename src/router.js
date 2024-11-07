@@ -14,7 +14,6 @@ import {
   actualizarVisualizacionBarras,
 } from "./escenarios/escenarioBarras.js";
 // Importaremos otros escenarios conforme los implementemos
-// import { iniciarEscenarioInfantil, actualizarVisualizacionInfantil } from './escenarios/escenarioInfantil.js';
 
 // Variable para almacenar la función de visualización del escenario activo
 let actualizarVisualizacionActual;
@@ -31,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       actualizarVisualizacionActual(nivelRuido, umbrales);
     }
   });
+
   // Configurar eventos de umbrales y guardar cambios
   const sliderEstable = document.getElementById("sliderEstable");
   const btnGuardar = document.querySelector(
@@ -85,15 +85,6 @@ function seleccionarEscenario(escenario) {
       iniciarEscenarioBarras();
       actualizarVisualizacionActual = actualizarVisualizacionBarras;
       break;
-
-    // Otros escenarios se agregarán aquí
-    /*
-        case "infantil":
-            console.log("Cargando el escenario infantil...");
-            iniciarEscenarioInfantil();
-            actualizarVisualizacionActual = actualizarVisualizacionInfantil;
-            break;
-        */
 
     default:
       console.warn(`Escenario desconocido: ${escenario}`);

@@ -1,124 +1,280 @@
-header,
-footer {
-  background-color: #276db3;
-  /* Color más suave para el fondo */
-  color: white;
-  /* Contraste con el texto en blanco */
-}
-
-header {
-  height: 15vh;
-  /* 15% de la altura de la vista */
-}
-
-/* Estilos responsivos para el título del header */
-header h1 {
-  font-size: clamp(1.5rem, 4vw, 3rem); /* Ajuste dinámico del tamaño del título */
+/* --------------------- Estilos Generales --------------------- */
+html,
+body {
   margin: 0;
-}
-
-/* Estilos responsivos para el span del header */
-header span {
-  font-size: clamp(0.8rem, 2vw, 1.5rem); /* Ajuste dinámico del tamaño del texto del span */
-}
-
-
-/* Estilo responsivo para la imagen del header */
-header img {
-  width: auto; /* Mantener las proporciones de la imagen */
-  height: 13vh; /* La imagen ocupará el 80% de la altura del header */
-  max-height: 13vh; /* Asegura que no exceda el 80% de la altura del header */
-  object-fit: contain; /* Mantiene la imagen dentro de sus proporciones originales */
-}
-
-
-footer {
-  height: 10vh;
-  /* 10% de la altura de la vista */
-}
-
-/* Estilos para el texto del footer para que sea responsive */
-
-
-section {
-  height: 75vh;
-  /* 75% de la altura de la vista */
-  background-color: #e9ecef;
-}
-
-/* Ajuste responsivo para el contenedor de la tarjeta */
-.card {
-  max-height: 70vh; /* Mantener la altura máxima en 70% del viewport */
-
+  padding: 0;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-
-/* Ajuste de los títulos dentro de la sección de estado */
-.titulo-estado {
-  font-weight: normal; /* Elimina la negrita */
-  color: #0d6efd; /* Color principal */
-  font-size: 2.5vw; /* Tamaño del texto relativo al ancho de la ventana para hacerlo responsivo */
+/* --------------------- Header --------------------- */
+header {
+  height: 10vh;
+  background-color: #6EC6FF;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  border-bottom: 2px solid #ccc;
 }
 
-#visualizador {
-  width: 100%;
-  /* Ancho total del div padre */
-  height: 100%;
-  /* Altura ajustada al 80% del div padre */
-  border: 1px solid #007bff;
-  /* Borde del canvas */
-  background-color: white;
-  /* Fondo blanco */
-  border-radius: 10px;
-  /* Esquinas redondeadas */
+/* --------------------- Panel de configuración --------------------- */
+/* Botón de offcanvas */
+.menu-btn {
+  background-color: #6EC6FF;
+  /* Color de fondo del botón */
+  border: none;
+  color: white;
+  /* Color del icono, puedes cambiar a #FFF176 si prefieres */
+  padding: 3vh;
+  border-radius: 8px;
+  /* Bordes redondeados */
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
-/* Asegurar que el div contenedor tenga suficiente altura */
-.canvas-container {
-  height: 70vh;
-  /* Ajuste de altura del div contenedor */
+/* Icono dentro del botón */
+.menu-btn i {
+  font-size: 5vh;
+  /* Tamaño del icono */
+}
+
+/* Efecto al pasar el mouse */
+.menu-btn:hover {
+  background-color: #FFD43B;
+  /* Color de fondo al hacer hover */
+}
+
+/* Estilo para el título del panel */
+#panelConfiguracionLabel {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+#panelConfiguracion {
+  width: 20vw !important; /* 20% del ancho del viewport */
+  max-width: none; /* Deshabilita el ancho máximo predeterminado */
+}
+
+.offcanvas-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Espacio adecuado entre el título y el canvas */
+  /* Centra verticalmente */
+  align-items: center;
+  /* Centra horizontalmente */
+  height: 100%;
+  /* Asegura que ocupe toda la altura del contenedor */
 }
 
-/* Transición suave para las imágenes */
-/* Estilo para la imagen en la sección de estado */
-#estado-imagen {
-  max-height: 100%; /* Asegura que la imagen ocupe el espacio máximo dentro de su bloque sin distorsionarse */
-  transition: opacity 0.5s ease-in-out; 
-  width: auto; /* Mantiene el ancho automático para mantener proporciones */
-  object-fit: contain; /* Evita que la imagen se distorsione */
+/* Estilos para los botones en el panel de configuración */
+.icono-contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2vh 1vh;
+  margin: 1vh 0;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-align: center;
+  width: 100%;
 }
+
+/* Efecto al pasar el mouse */
+.icono-contenedor:hover {
+  background-color: #b0bec5;
+  transform: scale(1.05);
+}
+
+/* Eliminar el enfoque azul predeterminado en botones */
+.icono-contenedor:focus {
+  outline: none;
+}
+
+/* Estilos para los íconos dentro de los botones */
+.icono-contenedor i {
+  font-size: 4vw; /* Ajusta según tus preferencias */
+  color: #424242;
+}
+
+/* Estilos para el texto de los botones */
+.icono-contenedor p {
+  font-size: 1.5vw;
+  color: #424242;
+  margin: 0.5vh 0 0 0;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .icono-contenedor i {
+    font-size: 6vw;
+  }
+
+  .icono-contenedor p {
+    font-size: 3vw;
+  }
+}
+
+.icono-contenedor p {
+  text-align: center;
+  font-size: 0.9rem;
+  /* Ajusta el tamaño de texto */
+  margin-top: 5px;
+  /* Espacio entre el ícono y el texto */
+}
+
+
+/* Estilos para los elementos dentro del panel de configuración */
+.configuracion-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.icono-config {
+  font-size: 2rem;
+  /* Tamaño del icono */
+  color: #333;
+  /* Color del icono */
+  background-color: #e0e0e0;
+  /* Fondo detrás del icono */
+  padding: 1rem;
+  /* Espacio alrededor del icono */
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+
+
+/* Estado del ruido */
+.estado-ruido {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.titulo-estado {
+  font-weight: normal;
+  color: #ffffff;
+  font-size: 2.5vw;
+  font-weight: bold; /* Aplica negrita */
+  white-space: nowrap; /* Evita que el texto se divida en líneas */
+}
+/* Contenedor del estado dinámico y decibeles */
+.estado-detalle {
+  display: flex;
+  align-items: baseline; /* Alinea el texto verticalmente */
+  white-space: nowrap; /* Asegura que no haya salto de línea */
+}
+
+/* Ajuste de texto para decibeles */
+.decibeles-texto {
+  font-size: 3vh; /* Ajusta el tamaño según sea necesario */
+  margin-left: 0.5rem; /* Espacio entre el texto del estado y los decibeles */
+}
+
+#estado-texto {
+  font-size: 2.5vw;
+  color: #ffffff;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+/* Botón de logros */
+.icono-logros {
+  background-color: transparent;
+  border: none;
+  color: #FFD43B;
+  font-size: 1.5vh;
+}
+
+/* --------------------- Footer --------------------- */
+footer {
+  height: 10vh;
+  background-color: #6EC6FF;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --------------------- Section --------------------- */
+section {
+  flex: 1;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: #B39DDB;*/
+}
+
+/* --------------------- Componentes de Section --------------------- */
+
+/* Card para el contenido principal */
+.card {
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFF176;
+}
+
+/* Canvas para visualizador */
+#visualizador {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #007bff;
+  background-color: #F5F5F5;
+  border-radius: 10px;
+}
+
+/* Contenedor del canvas */
+.canvas-container {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Imagen en la sección de estado */
+#estado-imagen {
+  max-height: 100%;
+  transition: opacity 0.5s ease-in-out;
+  width: auto;
+  object-fit: contain;
+}
+
+/* --------------------- Slider para Umbrales --------------------- */
 
 input[type="range"] {
   width: 100%;
-  height: 8px; /* Ajusta esta altura según lo necesites */
-  background-color: #ddd; /* Color por defecto de la barra */
+  height: 8px;
+  background-color: #ddd;
   border-radius: 5px;
   outline: none;
-  -webkit-appearance: none; /* Restablece el estilo por defecto en navegadores WebKit */
-  appearance: none; /* Restablece el estilo por defecto en otros navegadores */
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 input[type="range"]::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
-  background: yellow; /* Color del thumb */
+  background: yellow;
   cursor: pointer;
   border-radius: 50%;
-  position: relative;
-  z-index: 2;
 }
 
 input[type="range"]::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  background: yellow; /* Color del thumb */
+  background: yellow;
   cursor: pointer;
   border-radius: 50%;
 }
-
