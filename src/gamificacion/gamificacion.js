@@ -1,5 +1,7 @@
 "use strict";
 
+import { iniciarTemporizador } from './gamificacionControlador.js';
+
 // Mostrar el modal al inicio de la aplicación
 window.onload = function() {
   const modalDefinirMeta = new bootstrap.Modal(document.getElementById('modalDefinirMeta'));
@@ -30,7 +32,9 @@ guardarMetaBtn.addEventListener('click', function() {
 // Función para iniciar la meta con la duración seleccionada
 function iniciarSesionMeta(duracion) {
   console.log(`Iniciando sesión de meta con duración de ${duracion} minutos.`);
-  // Aquí puedes agregar la lógica para iniciar el temporizador y manejar el progreso de la meta
+  iniciarTemporizador(duracion); // Iniciar el temporizador
+  // Otras lógicas relacionadas con la sesión de meta
 }
+
 
 export { iniciarSesionMeta };

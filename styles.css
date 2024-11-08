@@ -188,12 +188,20 @@ header {
   font-weight: normal;
 }
 
+/* --------------------- Logros --------------------- */
 /* Botón de logros */
 .icono-logros {
   background-color: transparent;
   border: none;
   color: #FFD43B;
   font-size: 1.5vh;
+}
+
+
+.temporizador {
+  font-size: 1.2rem;
+  color: #FFF176; /* Ajusta el color según tu preferencia */
+  font-weight: bold;
 }
 
 /* --------------------- Footer --------------------- */
