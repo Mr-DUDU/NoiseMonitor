@@ -130,7 +130,6 @@ header {
   /* Espacio entre el ícono y el texto */
 }
 
-
 /* Estilos para los elementos dentro del panel de configuración */
 .configuracion-item {
   display: flex;
@@ -152,8 +151,6 @@ header {
   margin-bottom: 0.5rem;
 }
 
-
-
 /* Estado del ruido */
 .estado-ruido {
   flex-grow: 1;
@@ -168,6 +165,7 @@ header {
   font-weight: bold; /* Aplica negrita */
   white-space: nowrap; /* Evita que el texto se divida en líneas */
 }
+
 /* Contenedor del estado dinámico y decibeles */
 .estado-detalle {
   display: flex;
@@ -186,22 +184,6 @@ header {
   color: #ffffff;
   margin-left: 8px;
   font-weight: normal;
-}
-
-/* --------------------- Logros --------------------- */
-/* Botón de logros */
-.icono-logros {
-  background-color: transparent;
-  border: none;
-  color: #FFD43B;
-  font-size: 1.5vh;
-}
-
-
-.temporizador {
-  font-size: 1.2rem;
-  color: #FFF176; /* Ajusta el color según tu preferencia */
-  font-weight: bold;
 }
 
 /* --------------------- Footer --------------------- */
@@ -225,7 +207,6 @@ section {
 }
 
 /* --------------------- Componentes de Section --------------------- */
-
 /* Card para el contenido principal */
 .card {
   max-height: 70vh;
@@ -260,7 +241,6 @@ section {
 }
 
 /* --------------------- Slider para Umbrales --------------------- */
-
 input[type="range"] {
   width: 100%;
   height: 8px;

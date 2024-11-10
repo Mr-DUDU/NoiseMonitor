@@ -6,13 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Título de la página -->
-  <title>Monitor de Ruido en el Aula</title>
+  <title>Monitor de ruido en el aula</title>
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
   <!-- Estilos personalizados -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles/styles.css" />
+  <link rel="stylesheet" href="styles/gamificacion.css" />
+  <link rel="stylesheet" href="/styles/escenarios.css" />
 
   <!-- FontAwesome (sin atributos de integridad) -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
@@ -20,32 +22,43 @@
 
 
 <body>
-  <!--                                        Header                                  -->
   <header class="header d-flex align-items-center justify-content-between px-4">
     <!-- Botón panel de configuraciones -->
     <button class="menu-btn me-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#panelConfiguracion"
       aria-controls="panelConfiguracion">
       <i class="fa-solid fa-bars fa-2xs"></i>
     </button>
-
-    <!-- Texto de estado -->
-    <div class="estado-ruido d-flex align-items-center">
-      <h1 class="titulo-estado">Estado:</h1>
-      <div class="estado-detalle ms-2 d-flex align-items-center">
-        <h1 id="estado-texto" class="titulo-estado me-2">Silencioso</h1>
-        <span id="estado-decibeles" class="decibeles-texto">90 dB</span>
+  
+    <!-- Contenedor del texto de estado -->
+    <div class="d-flex flex-grow-1 align-items-center">
+      <div class="estado-ruido d-flex align-items-center" style="min-width: 250px;">
+        <h1 class="titulo-estado">Estado:</h1>
+        <div class="estado-detalle ms-2 d-flex align-items-center">
+          <h1 id="estado-texto" class="titulo-estado me-2">Silencioso</h1>
+          <span id="estado-decibeles" class="decibeles-texto">90 dB</span>
+        </div>
       </div>
     </div>
-
-    <!-- Temporizador al lado del botón de logros -->
+  
+    <!-- Temporizador centrado -->
     <div id="temporizador" class="temporizador ms-3">00:00</div>
-
+  
+    <!-- Contenedor de estrellas de progreso -->
+    <div class="estrellas-progreso d-flex align-items-center me-3">
+      <i class="fa-solid fa-star estrella-inactiva"></i>
+      <i class="fa-solid fa-star estrella-inactiva"></i>
+      <i class="fa-solid fa-star estrella-inactiva"></i>
+      <i class="fa-solid fa-star estrella-inactiva"></i>
+      <i class="fa-solid fa-star estrella-inactiva"></i>
+    </div>
+  
     <!-- Botón de logros -->
     <button class="btn btn-outline-secondary icono-logros" type="button">
       <img src="https://uxwing.com/wp-content/themes/uxwing/download/sport-and-awards/achievement-award-medal-icon.svg"
         alt="Logros" style="width: 24px; height: 24px;" />
     </button>
   </header>
+  
 
   <!-- Offcanvas del Panel de Configuración -->
   <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="panelConfiguracion"
@@ -118,6 +131,9 @@
   <section class="d-flex align-items-center justify-content-center">
     <div class="container text-center">
       <div class="row border">
+        <div class="progreso-meta">
+          <div id="barraProgreso" class="barra-progreso"></div>
+        </div>
         <!-- Monitor -->
         <div class="col-8 canvas-container">
           <!-- Canvas -->
