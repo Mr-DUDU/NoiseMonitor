@@ -115,11 +115,13 @@ function calcularNivelRuido(dataArray) {
 function ajustarVisualizacion(nivelRuido) {
   const imagenEstado = document.getElementById("estado-imagen");
   const textoEstado = document.getElementById("estado-texto"); // Elemento del texto del estado
+  let nuevoEstado = "estable";
 
   // Cambiar imagen y texto según el nivel de ruido y el estado actual
   if (nivelRuido < umbralEstable && estadoActualImagen !== "estable") {
     cambiarImagen(imagenEstado, imagenes.estable, "estable");
     textoEstado.innerText = "Estable"; // Actualizar el texto del estado
+    nuevoEstado = "estable";
   } else if (
     nivelRuido >= umbralEstable &&
     nivelRuido < umbralModerado &&
@@ -127,11 +129,16 @@ function ajustarVisualizacion(nivelRuido) {
   ) {
     cambiarImagen(imagenEstado, imagenes.moderado, "moderado");
     textoEstado.innerText = "Moderado"; // Actualizar el texto del estado
+    nuevoEstado = "moderado";
   } else if (nivelRuido >= umbralModerado && estadoActualImagen !== "alto") {
     cambiarImagen(imagenEstado, imagenes.alto, "alto");
     textoEstado.innerText = "Alto"; // Actualizar el texto del estado
+    nuevoEstado = "alto";
   }
+
+  return nuevoEstado;
 }
+
 
 /**
  * Función para cambiar la imagen con una transición suave.
@@ -150,4 +157,4 @@ function cambiarImagen(imagenElemento, nuevaImagen, nuevoEstado) {
 
 //---------------------------- Exportaciones -----------------------
 
-export { iniciarDeteccionSonido, actualizarUmbral, guardarCalibracion };
+export { iniciarDeteccionSonido, actualizarUmbral, guardarCalibracion, ajustarVisualizacion };

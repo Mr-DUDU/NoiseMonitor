@@ -1,58 +1,76 @@
 /* --------------------- Logros --------------------- */
 /* Botón de logros */
 .icono-logros {
-    background-color: transparent;
-    border: none;
-    color: #FFD43B;
-    font-size: 1.5vh;
-  }
-  
-  /* Temporizador */
-  .temporizador {
-    font-size: 1.2rem;
-    color: #FFF176; /* Ajusta el color según tu preferencia */
-    font-weight: bold;
-  }
+  background-color: transparent;
+  border: none;
+  color: #FFD43B;
+  font-size: 1.5vh;
+}
 
-  /* Estrellas */
+/* Temporizador */
+.temporizador {
+  font-size: 1.2rem;
+  color: #FFF176;
+  /* Ajusta el color según tu preferencia */
+  font-weight: bold;
+}
+
+/* --------------------- Estrellas --------------------- */
 .estrellas-progreso {
-    display: flex;
-    align-items: center;
-  }
-  
-  .fa-star {
-    font-size: 1.5rem;
-    color: #ccc; /* Color inicial para estrellas inactivas */
-    margin-right: 4px;
-  }
-  
-  .estrella-activa {
-    color: #FFD700; /* Color dorado para estrellas activas */
-  }
-  
-  .progreso-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  
-  .barra-progreso {
-    width: 100%;
-    height: 20px;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .barra-progreso::after {
-    content: '';
-    position: absolute;
-    left: 0; /* Asegura que empiece desde el lado izquierdo */
-    height: 100%;
-    width: var(--progreso, 0%);
-    background-color: #76c7c0;
-    transition: width 0.5s linear;
-  }
+  display: flex;
+  align-items: center;
+}
+
+.fa-star {
+  font-size: 1.5rem;
+  color: #ccc;
+  /* Color inicial para estrellas inactivas */
+  margin-right: 4px;
+}
+
+.estrella-activa {
+  color: #FFD700;
+  /* Color dorado para estrellas activas */
+}
+
+.estrella-perdida {
+  color: #ff0000;
+  /* Color de estrella "perdida" o tachada */
+  text-decoration: line-through;
+  /* Línea para simular tachado */
+}
+
+/* Para evitar que las estrellas tachadas se muestren en el header (puedes optar por ocultarlas si lo prefieres) */
+.ocultar-estrella {
+  display: none;
+  /* Oculta completamente la estrella */
+}
+
+/* --------------------- Barra de progreso --------------------- */
+.progreso-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.barra-progreso {
+  width: 100%;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.barra-progreso::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  /* Asegura que empiece desde el lado izquierdo */
+  height: 100%;
+  width: var(--progreso, 0%);
+  background-color: #FFD43B;
+  transition: width 0.5s linear;
+}

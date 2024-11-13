@@ -1,5 +1,7 @@
 let temporizadorInterval;
 let tiempoRestante; // Variable global para almacenar el tiempo en segundos
+let totalCiclos = 5; // Cambiado a variable mutable
+const estrellas = document.querySelectorAll(".fa-star");
 
 /**
  * Función para iniciar el temporizador.
@@ -21,7 +23,7 @@ function iniciarTemporizador(duracion) {
   temporizadorInterval = setInterval(() => {
     if (tiempoRestante <= 0) {
       clearInterval(temporizadorInterval);
-      console.log("Meta completada o tiempo agotado.");
+      console.log("Tiempo agotado.");
       return;
     }
 
@@ -36,75 +38,115 @@ function iniciarTemporizador(duracion) {
 function actualizarVisualizacionTemporizador() {
   const minutos = Math.floor(tiempoRestante / 60);
   const segundos = tiempoRestante % 60;
-  const temporizadorElemento = document.getElementById('temporizador');
+  const temporizadorElemento = document.getElementById("temporizador");
 
   // Formatear el tiempo como "MM:SS"
   temporizadorElemento.textContent = `${minutos
     .toString()
-    .padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+    .padStart(2, "0")}:${segundos.toString().padStart(2, "0")}`;
 }
 
-// Ejemplo de inicialización en gamificacion.js o donde se controla el flujo
-const duracionSeleccionada = 25; // Este valor debe venir de la selección en el modal
-const tiempoPorCiclo = calcularTiempoPorCiclo(duracionSeleccionada);
-
 function calcularTiempoPorCiclo(duracionSeleccionada) {
-  console.log('Función calcularTiempoPorCiclo llamada con duración:', duracionSeleccionada);
-
-  if (typeof duracionSeleccionada !== 'number' || duracionSeleccionada <= 0) {
-      console.warn("Duración seleccionada no válida:", duracionSeleccionada);
-      return;
-  }
-
+  // Convierte la duración seleccionada en minutos a milisegundos divididos en 5 ciclos
   const tiempoPorCiclo = (duracionSeleccionada * 60 * 1000) / 5;
-  console.log(`Duración total seleccionada: ${duracionSeleccionada} minutos`);
-  console.log(`Tiempo por ciclo calculado: ${tiempoPorCiclo} ms`);
-  
   return tiempoPorCiclo;
 }
 
 function iniciarBarraDeProgreso(tiempoPorCiclo) {
-  const barraProgreso = document.getElementById('barraProgreso');
-  const estrellas = document.querySelectorAll('.fa-star'); // Seleccionar las estrellas
-  let tiempoTranscurrido = 0;
+  const barraProgreso = document.getElementById("barraProgreso");
   let ciclosCompletados = 0;
   let estrellasCompletadas = 0;
-  const totalCiclos = 5; // Siempre serán 5 ciclos
-  const intervalo = 1000; // 1000 ms (1 segundo)
-  const incrementoPorIntervalo = (100 / (tiempoPorCiclo / intervalo));
+  let progresoAcumulado = 0;
+  const intervalo = 1000;
+  let tiempoMetaEstable = tiempoPorCiclo * 0.8;
+  let avanceRapido = (tiempoPorCiclo * 0.8) / (tiempoPorCiclo / intervalo);
 
   function iniciarCiclo() {
-    // Reiniciar la barra de progreso al iniciar
-    barraProgreso.style.setProperty('--progreso', '0%');
-    tiempoTranscurrido = 0;
+    // Reiniciar la barra de progreso al iniciar cada ciclo
+    barraProgreso.style.setProperty("--progreso", "0%");
+    progresoAcumulado = 0;
 
     const timer = setInterval(() => {
-      tiempoTranscurrido += intervalo;
-      const porcentajeProgreso = Math.min((tiempoTranscurrido / tiempoPorCiclo) * 100, 100);
+      // Verificar si el tiempo restante es 0 o menos
+      if (tiempoRestante <= 0) {
+        clearInterval(timer);
+        console.log("Tiempo agotado. Progreso finalizado.");
+        mostrarEstadoFinal(
+          estrellasCompletadas,
+          progresoAcumulado,
+          tiempoMetaEstable
+        );
+        return;
+      }
+      // Obtener el valor del estado actual desde el DOM
+      const estadoElemento = document.getElementById("estado-texto");
+      let estadoActual = estadoElemento
+        ? estadoElemento.innerText.trim().toLowerCase()
+        : "desconocido";
 
-      // Actualiza el ancho de la barra de progreso
-      barraProgreso.style.setProperty('--progreso', `${porcentajeProgreso}%`);
+      console.log("Estado actual:", estadoActual);
+      console.log("# de Ciclos", totalCiclos);
 
-      // Verifica si el ciclo se ha completado
-      if (tiempoTranscurrido >= tiempoPorCiclo) {
+      // Lógica de avance o retroceso según el estado
+      if (estadoActual === "estable" || estadoActual === "silencioso") {
+        // Incremento rápido en estado "estable"
+        tiempoMetaEstable = tiempoPorCiclo * 0.6;
+        progresoAcumulado += avanceRapido;
+      } else if (estadoActual === "moderado") {
+        // Retroceso en estado "moderado"
+        progresoAcumulado -= avanceRapido * 0.2; // O usa otro decremento proporcional si prefieres
+      } else if (estadoActual === "alto") {
+        if (totalCiclos > 1) {
+          console.log(`Eliminando ciclo ${totalCiclos}.`);
+          totalCiclos--;
+          eliminarCiclo(estrellasCompletadas);
+          marcarUltimaEstrellaPerdida();
+          if (ciclosCompletados >= totalCiclos) {
+            clearInterval(timer);
+            console.log("Meta no alcanzada. Se eliminaron demasiados ciclos.");
+            clearInterval(temporizadorInterval);
+            return;
+          }
+        } else {
+          console.log("No se pueden eliminar más ciclos. Meta no alcanzada.");
+          mostrarEstadoFinal(
+            estrellasCompletadas,
+            progresoAcumulado,
+            tiempoMetaEstable
+          );
+          clearInterval(timer);
+          clearInterval(temporizadorInterval);
+          return;
+        }
+      }
+
+      // Actualización del progreso visual
+      const porcentajeProgreso = Math.min(
+        (progresoAcumulado / tiempoMetaEstable) * 100,
+        100
+      );
+      barraProgreso.style.setProperty("--progreso", `${porcentajeProgreso}%`);
+
+      if (porcentajeProgreso >= 100) {
+        // Completó el ciclo
         clearInterval(timer);
         ciclosCompletados++;
         console.log(`Ciclo completado: ${ciclosCompletados}/${totalCiclos}`);
 
-        // Lógica para marcar una estrella como completa
         if (estrellasCompletadas < estrellas.length) {
-          estrellas[estrellasCompletadas].classList.remove('estrella-inactiva');
-          estrellas[estrellasCompletadas].classList.add('estrella-activa');
+          estrellas[estrellasCompletadas].classList.remove("estrella-inactiva");
+          estrellas[estrellasCompletadas].classList.add("estrella-activa");
           estrellasCompletadas++;
         }
 
         if (ciclosCompletados < totalCiclos) {
           // Si aún quedan ciclos por completar, iniciar el siguiente ciclo
           iniciarCiclo();
-        } else {
-          console.log('Todos los ciclos completados');
+        } else if (totalCiclos === 5){
+          console.log("Todos los ciclos completados, con todas las estrellas.");
           // Aquí puedes agregar lógica adicional si todos los ciclos se completaron
         }
+
       }
     }, intervalo);
   }
@@ -113,5 +155,45 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
   iniciarCiclo();
 }
 
+function eliminarCiclo(estrellasCompletadas) {
+  console.log("Eliminando un ciclo debido a estado alto.");
+
+}
+
+function marcarUltimaEstrellaPerdida() {
+  const estrellas = document.querySelectorAll('.fa-star');
+  for (let i = estrellas.length - 1; i >= 0; i--) {
+    if (estrellas[i].classList.contains('estrella-inactiva')) {
+      // Quitar la clase de estrella inactiva
+      estrellas[i].classList.remove('estrella-inactiva');
+
+      // Agregar la clase de estrella perdida
+      estrellas[i].classList.add('estrella-perdida');
+
+
+      console.log(`Estrella en posición ${i} marcada como perdida.`);
+      break; // Terminar el bucle después de encontrar y modificar la última estrella inactiva
+    }
+  }
+}
+
+function mostrarEstadoFinal(
+  estrellasCompletadas,
+  progresoAcumulado,
+  tiempoMetaEstable
+) {
+  const porcentajeProgresoFinal = Math.min(
+    (progresoAcumulado / tiempoMetaEstable) * 100,
+    100
+  );
+  const porcentajeTotal =
+    estrellasCompletadas * 20 + porcentajeProgresoFinal * 0.2;
+
+  if (estrellasCompletadas < 5) {
+console.log('Estrellas completadas: ', estrellasCompletadas);
+    console.log(`Progreso acumulado total: ${porcentajeTotal.toFixed(2)}%`);
+  }
+}
+
 // Exponer la función de inicio del temporizador si es necesario
-export { iniciarTemporizador, calcularTiempoPorCiclo , iniciarBarraDeProgreso};
+export { iniciarTemporizador, calcularTiempoPorCiclo, iniciarBarraDeProgreso };
