@@ -3,8 +3,7 @@
 // Author: David Averos
 // Last update: 2024-11-04
 
-//---------------------------- Configuración de Umbrales -----------------------
-
+//---------------------------- Configuración de Umbrales & Variables -----------------------
 // Variables de umbrales de ruido
 let umbralEstable = 20;
 let umbralModerado = umbralEstable + 30;
@@ -12,14 +11,15 @@ let umbralAlto = umbralModerado + 30;
 
 // Rutas de imágenes para diferentes estados de ruido
 const imagenes = {
-  estable: "./resources/estable.png",
-  moderado: "./resources/moderado.png",
-  alto: "./resources/alto.png",
+  estable: "./resources/imagenes/estable.png",
+  moderado: "./resources/imagenes/moderado.png",
+  alto: "./resources/imagenes/alto.png",
 };
 
 // Variable para controlar el estado actual de la imagen para evitar recambios innecesarios
 let estadoActualImagen = "estable";
 
+//---------------------------- Configuración Sonido -----------------------
 // Función para actualizar el valor del umbral estable en tiempo real
 function actualizarUmbral(tipo, valor) {
   console.log("Función actualizarUmbral llamada."); // Confirmación de llamada
@@ -32,12 +32,10 @@ function actualizarUmbral(tipo, valor) {
     umbralAlto = umbralModerado + 30;
 
     // Actualizar los rangos de los umbrales en el modal
-    document.getElementById("rangoEstable").innerText = `${umbralEstable} - ${
-      umbralModerado - 1
-    }`;
-    document.getElementById("rangoModerado").innerText = `${umbralModerado} - ${
-      umbralAlto - 1
-    }`;
+    document.getElementById("rangoEstable").innerText = `${umbralEstable} - ${umbralModerado - 1
+      }`;
+    document.getElementById("rangoModerado").innerText = `${umbralModerado} - ${umbralAlto - 1
+      }`;
     document.getElementById("rangoAlto").innerText = `${umbralAlto} - 150`;
 
     console.log("Umbrales ajustados:", {
@@ -55,7 +53,6 @@ function guardarCalibracion() {
 }
 
 //---------------------------- Captura de Sonido -----------------------
-
 /**
  * Función para iniciar la detección de sonido.
  * @param {function} callback - Función que recibirá nivel de ruido y umbrales para enviarlos al enrutador.
@@ -88,6 +85,9 @@ function iniciarDeteccionSonido(callback) {
           callback(nivelRuido, { umbralEstable, umbralModerado, umbralAlto });
         }
 
+        // Actualizar la visualización del nivel de decibeles en el DOM
+        actualizarVisualizacionDecibeles(nivelRuido);
+
         // Ajustar visualización según el nivel de ruido para la imagen y texto
         ajustarVisualizacion(nivelRuido);
       }
@@ -105,8 +105,14 @@ function calcularNivelRuido(dataArray) {
   return suma / dataArray.length;
 }
 
-//---------------------------- Visualización del Estado de Ruido -----------------------
+function actualizarVisualizacionDecibeles(nivelRuido) {
+  const estadoDecibelesElemento = document.getElementById("estado-decibeles");
+  if (estadoDecibelesElemento) {
+    estadoDecibelesElemento.textContent = `${nivelRuido.toFixed(2)} dB`;
+  }
+}
 
+//---------------------------- Visualización del Estado de Ruido -----------------------
 /**
  * Función para ajustar la visualización de la imagen y el texto del estado
  * de acuerdo con el nivel de ruido y los umbrales actuales.
@@ -116,30 +122,35 @@ function ajustarVisualizacion(nivelRuido) {
   const imagenEstado = document.getElementById("estado-imagen");
   const textoEstado = document.getElementById("estado-texto"); // Elemento del texto del estado
   let nuevoEstado = "estable";
+  console.log(`Nivel de ruido detectado: ${nivelRuido} dB`); // Registro para verificación
+  console.log(`Umbrales - Estable: ${umbralEstable}, Moderado: ${umbralModerado}, Alto: ${umbralAlto}`); // Verificación de umbrales
 
   // Cambiar imagen y texto según el nivel de ruido y el estado actual
-  if (nivelRuido < umbralEstable && estadoActualImagen !== "estable") {
-    cambiarImagen(imagenEstado, imagenes.estable, "estable");
-    textoEstado.innerText = "Estable"; // Actualizar el texto del estado
+  if (nivelRuido < umbralEstable) {
+    // Estable
+    if (estadoActualImagen !== "estable") {
+      cambiarImagen(imagenEstado, imagenes.estable, "estable");
+      textoEstado.innerText = "Estable";
+    }
     nuevoEstado = "estable";
-  } else if (
-    nivelRuido >= umbralEstable &&
-    nivelRuido < umbralModerado &&
-    estadoActualImagen !== "moderado"
-  ) {
-    cambiarImagen(imagenEstado, imagenes.moderado, "moderado");
-    textoEstado.innerText = "Moderado"; // Actualizar el texto del estado
+  } else if (nivelRuido >= umbralEstable && nivelRuido < umbralModerado) {
+    // Moderado
+    if (estadoActualImagen !== "moderado") {
+      cambiarImagen(imagenEstado, imagenes.moderado, "moderado");
+      textoEstado.innerText = "Moderado";
+    }
     nuevoEstado = "moderado";
-  } else if (nivelRuido >= umbralModerado && estadoActualImagen !== "alto") {
-    cambiarImagen(imagenEstado, imagenes.alto, "alto");
-    textoEstado.innerText = "Alto"; // Actualizar el texto del estado
+  } else if (nivelRuido >= umbralModerado) {
+    // Alto
+    if (estadoActualImagen !== "alto") {
+      cambiarImagen(imagenEstado, imagenes.alto, "alto");
+      textoEstado.innerText = "Alto";
+    }
     nuevoEstado = "alto";
   }
 
   return nuevoEstado;
 }
-
-
 /**
  * Función para cambiar la imagen con una transición suave.
  * @param {HTMLElement} imagenElemento - El elemento de la imagen que se va a cambiar
@@ -156,5 +167,4 @@ function cambiarImagen(imagenElemento, nuevaImagen, nuevoEstado) {
 }
 
 //---------------------------- Exportaciones -----------------------
-
 export { iniciarDeteccionSonido, actualizarUmbral, guardarCalibracion, ajustarVisualizacion };

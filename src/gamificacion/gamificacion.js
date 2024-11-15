@@ -20,8 +20,8 @@ duracionMetaInput.addEventListener('input', function() {
 // Manejar el evento del botón "Guardar Meta"
 const guardarMetaBtn = document.getElementById('guardarMetaBtn');
 guardarMetaBtn.addEventListener('click', function() {
-  //const duracionSeleccionada = parseInt(duracionMetaInput.value);
-  const duracionSeleccionada = 1
+  const duracionSeleccionada = parseInt(duracionMetaInput.value);
+  //const duracionSeleccionada = 1
   console.log(`Duración de la meta seleccionada: ${duracionSeleccionada} minutos`);
   
   // Llama a la función para calcular el tiempo por ciclo

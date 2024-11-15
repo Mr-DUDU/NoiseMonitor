@@ -17,9 +17,17 @@ header {
   align-items: center;
   padding: 0 1rem;
   border-bottom: 2px solid #ccc;
+  justify-content: space-between;
 }
 
-/* --------------------- Panel de configuración --------------------- */
+/* --------------------- Estilos del Header --------------------- */
+.header-bloque {
+  display: flex;
+  align-items: center;
+}
+
+
+/* --------------------- BLOQUE 1: Panel de configuración --------------------- */
 /* Botón de offcanvas */
 .menu-btn {
   background-color: #6EC6FF;
@@ -45,17 +53,20 @@ header {
 
 /* Efecto al pasar el mouse */
 .menu-btn:hover {
+  transform: scale(1.1); /* Efecto de hover para agrandar */
   background-color: #FFD43B;
   /* Color de fondo al hacer hover */
 }
 
+/* --------------------------- Estilos del offCanvas -------------------------- */
 /* Estilo para el título del panel */
 #panelConfiguracionLabel {
+  color: #333;
   font-weight: bold;
   font-size: 1.2rem;
 }
 #panelConfiguracion {
-  width: 20vw !important; /* 20% del ancho del viewport */
+  width: 25vw !important; /* 20% del ancho del viewport */
   max-width: none; /* Deshabilita el ancho máximo predeterminado */
 }
 
@@ -151,7 +162,7 @@ header {
   margin-bottom: 0.5rem;
 }
 
-/* Estado del ruido */
+/* --------------------- Estilos para el Contenedor de Estado --------------------- */
 .estado-ruido {
   flex-grow: 1;
   display: flex;
@@ -159,32 +170,37 @@ header {
 }
 
 .titulo-estado {
-  font-weight: normal;
-  color: #ffffff;
   font-size: 2.5vw;
-  font-weight: bold; /* Aplica negrita */
+  color: #ffffff;
+  font-weight: bold;
   white-space: nowrap; /* Evita que el texto se divida en líneas */
 }
 
-/* Contenedor del estado dinámico y decibeles */
 .estado-detalle {
   display: flex;
   align-items: baseline; /* Alinea el texto verticalmente */
-  white-space: nowrap; /* Asegura que no haya salto de línea */
+  white-space: nowrap; /* Evita que el texto haga salto de línea */
+  margin-left: 0.5rem; /* Espacio entre "Estado:" y el texto dinámico */
 }
 
-/* Ajuste de texto para decibeles */
+.estado-variable {
+  max-block-size: 110px; /* Si ya no es necesario limitar por contenido, puedes quitarlo */
+  width: 28vh; /* Fija el ancho según lo que necesites */
+  font-size: 2.5vw;
+  color: #ffffff;
+  font-weight: normal;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden; /* Si quieres que el texto que no cabe se recorte */
+  text-overflow: ellipsis; /* Muestra '...' si el texto es más largo */
+}
+
 .decibeles-texto {
   font-size: 3vh; /* Ajusta el tamaño según sea necesario */
   margin-left: 0.5rem; /* Espacio entre el texto del estado y los decibeles */
 }
 
-#estado-texto {
-  font-size: 2.5vw;
-  color: #ffffff;
-  margin-left: 8px;
-  font-weight: normal;
-}
+
 
 /* --------------------- Footer --------------------- */
 footer {

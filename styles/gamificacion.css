@@ -1,30 +1,47 @@
 /* --------------------- Logros --------------------- */
-/* Botón de logros */
+/* Ajustes para el botón de logros */
 .icono-logros {
-  background-color: transparent;
-  border: none;
-  color: #FFD43B;
-  font-size: 1.5vh;
+  font-size: 1.5rem;
+  color: white;
+  border-radius: 6px;
+  /* Bordes redondeados */
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
-/* Temporizador */
+.icono-logros:hover {
+  transform: scale(1.1); /* Efecto de hover para agrandar */
+  background-color: #FFD43B;
+}
+
+.icono-logros i {
+  font-size: 5vh;
+  /* Tamaño del icono */
+  color: #ffffff; /* Color anaranjado para el icono */
+}
+
+
 .temporizador {
-  font-size: 1.2rem;
-  color: #FFF176;
-  /* Ajusta el color según tu preferencia */
+  font-size: 2rem;
+  color: #FFF176;  /* Ajusta el color según tu preferencia */
   font-weight: bold;
 }
 
 /* --------------------- Estrellas --------------------- */
+/* Ajustes para las estrellas */
 .estrellas-progreso {
   display: flex;
   align-items: center;
+  justify-content: flex-end; /* Alinear a la derecha */
+  flex-wrap: wrap;
 }
 
 .fa-star {
-  font-size: 1.5rem;
+  font-size: clamp(1.5rem, 2.5vw, 2rem); /* Tamaño adaptable */
   color: #ccc;
-  /* Color inicial para estrellas inactivas */
   margin-right: 4px;
 }
 
@@ -73,4 +90,10 @@
   width: var(--progreso, 0%);
   background-color: #FFD43B;
   transition: width 0.5s linear;
+}
+
+
+#offcanvasMetas {
+  width: 25vw !important; /* 20% del ancho del viewport */
+  max-width: none; /* Deshabilita el ancho máximo predeterminado */
 }

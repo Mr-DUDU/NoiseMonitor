@@ -19,7 +19,6 @@ import {
 let actualizarVisualizacionActual;
 
 //---------------------------- Inicialización -----------------------
-
 // Función para inicializar el sistema cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM completamente cargado y analizado.");
@@ -64,6 +63,11 @@ document.addEventListener("DOMContentLoaded", () => {
       seleccionarEscenario(escenarioSeleccionado);
     });
   }
+
+  const btnVolverPanel = document.getElementById('btnVolverPanel');
+  if (btnVolverPanel) {
+    btnVolverPanel.addEventListener('click', volverAlPanelConfiguracion);
+  }
 });
 
 //---------------------------- Funciones de Escenarios -----------------------
@@ -92,7 +96,42 @@ function seleccionarEscenario(escenario) {
   }
 }
 
-//---------------------------- Exportaciones -----------------------
+//---------------------------- OffCanvas funcion -----------------------
+//---------------------------- Función para manejar el cambio de offcanvas -----------------------
 
+function volverAlPanelConfiguracion() {
+  // Cierra el offcanvas de escenarios manualmente
+  const offcanvasEscenarios = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasEscenarios'));
+  if (offcanvasEscenarios) {
+    offcanvasEscenarios.hide();
+  }
+
+  // Abre el offcanvas del panel de configuración manualmente
+  const panelConfiguracion = new bootstrap.Offcanvas(document.getElementById('panelConfiguracion'));
+  panelConfiguracion.show();
+}
+
+
+
+
+
+// Llama a la función cuando se cargue la página y cada vez que cambie la orientación del dispositivo
+window.addEventListener('load', forzarOrientacionHorizontal);
+window.addEventListener('resize', forzarOrientacionHorizontal);
+
+//---------------------------- OffCanvas funcion -----------------------
+document.getElementById('expandirPantallaBtn').addEventListener('click', function () {
+  toggleFullScreen();
+});
+
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch((err) => {
+      alert(`Error al intentar entrar en modo de pantalla completa: ${err.message}`);
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
 // Exportar la función de selección de escenario si es necesario en otros módulos
-export { seleccionarEscenario };
+export { seleccionarEscenario , volverAlPanelConfiguracion,toggleFullScreen};
