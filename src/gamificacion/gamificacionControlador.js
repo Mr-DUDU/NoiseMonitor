@@ -1,7 +1,44 @@
 let temporizadorInterval;
 let tiempoRestante; // Variable global para almacenar el tiempo en segundos
-let totalCiclos = 5; // Cambiado a variable mutable
 const estrellas = document.querySelectorAll(".fa-star");
+
+let estadoMeta = {
+  estrellasCompletadas: 0,
+  progresoAcumulado: 0,
+  tiempoMetaEstable: 0, // Será asignado dinámicamente
+  ciclosCompletados: 0,
+  totalCiclos: 5, // Número inicial de ciclos
+};
+
+function resetearJuego() {
+  // Reiniciar estadoMeta
+  estadoMeta.estrellasCompletadas = 0;
+  estadoMeta.progresoAcumulado = 0;
+  estadoMeta.tiempoMetaEstable = 0;
+  estadoMeta.ciclosCompletados = 0;
+  estadoMeta.totalCiclos = 5;
+
+  // Reiniciar las estrellas (volverlas a grises)
+  estrellas.forEach((estrella) => {
+    estrella.classList.remove("estrella-activa", "estrella-perdida");
+    estrella.classList.add("estrella-inactiva");
+  });
+
+  // Reiniciar la barra de progreso
+  const barraProgreso = document.getElementById("barraProgreso");
+  barraProgreso.style.setProperty("--progreso", "0%");
+  barraProgreso.innerText = "";
+
+  // Reiniciar el temporizador
+  if (temporizadorInterval) {
+    clearInterval(temporizadorInterval); // Detener el temporizador actual
+    tiempoRestante = 0; // Reiniciar el tiempo restante
+    actualizarVisualizacionTemporizador(); // Actualizar la visualización a 00:00
+  }
+
+  console.log("Juego reiniciado.");
+}
+
 
 /**
  * Función para iniciar el temporizador.
@@ -23,7 +60,8 @@ function iniciarTemporizador(duracion) {
   temporizadorInterval = setInterval(() => {
     if (tiempoRestante <= 0) {
       clearInterval(temporizadorInterval);
-      console.log("Tiempo agotado.");
+      console.log("Tiempo agotado. 2");
+      mostrarEstadoFinal();
       return;
     }
 
@@ -54,28 +92,21 @@ function calcularTiempoPorCiclo(duracionSeleccionada) {
 
 function iniciarBarraDeProgreso(tiempoPorCiclo) {
   const barraProgreso = document.getElementById("barraProgreso");
-  let ciclosCompletados = 0;
-  let estrellasCompletadas = 0;
-  let progresoAcumulado = 0;
   const intervalo = 1000;
-  let tiempoMetaEstable = tiempoPorCiclo * 0.8;
+  estadoMeta.tiempoMetaEstable = tiempoPorCiclo * 0.8;
   let avanceRapido = (tiempoPorCiclo * 0.8) / (tiempoPorCiclo / intervalo);
 
   function iniciarCiclo() {
     // Reiniciar la barra de progreso al iniciar cada ciclo
     barraProgreso.style.setProperty("--progreso", "0%");
-    progresoAcumulado = 0;
+    estadoMeta.progresoAcumulado = 0;
 
     const timer = setInterval(() => {
       // Verificar si el tiempo restante es 0 o menos
       if (tiempoRestante <= 0) {
         clearInterval(timer);
         console.log("Tiempo agotado. Progreso finalizado.");
-        mostrarEstadoFinal(
-          estrellasCompletadas,
-          progresoAcumulado,
-          tiempoMetaEstable
-        );
+
         return;
       }
       // Obtener el valor del estado actual desde el DOM
@@ -84,36 +115,33 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
         ? estadoElemento.innerText.trim().toLowerCase()
         : "desconocido";
 
-      console.log("Estado actual:", estadoActual);
-      console.log("# de Ciclos", totalCiclos);
+      //console.log("Estado actual:", estadoActual);
+      //console.log("# de Ciclos", estadoMeta.totalCiclos);
 
       // Lógica de avance o retroceso según el estado
       if (estadoActual === "estable" || estadoActual === "silencioso") {
         // Incremento rápido en estado "estable"
-        tiempoMetaEstable = tiempoPorCiclo * 0.6;
-        progresoAcumulado += avanceRapido;
+        estadoMeta.tiempoMetaEstable = tiempoPorCiclo * 0.7;
+        estadoMeta.progresoAcumulado += avanceRapido;
       } else if (estadoActual === "moderado") {
         // Retroceso en estado "moderado"
-        progresoAcumulado -= avanceRapido * 0.2; // O usa otro decremento proporcional si prefieres
+        estadoMeta.progresoAcumulado -= avanceRapido * 0.2; // O usa otro decremento proporcional si prefieres
       } else if (estadoActual === "alto") {
-        if (totalCiclos > 1) {
-          console.log(`Eliminando ciclo ${totalCiclos}.`);
-          totalCiclos--;
-          eliminarCiclo(estrellasCompletadas);
+        if (estadoMeta.totalCiclos > 1) {
+          console.log(`Eliminando ciclo ${estadoMeta.totalCiclos}.`);
+          estadoMeta.totalCiclos--;
+          eliminarCiclo(estadoMeta.estrellasCompletadas);
           marcarUltimaEstrellaPerdida();
-          if (ciclosCompletados >= totalCiclos) {
+          if (estadoMeta.ciclosCompletados >= estadoMeta.totalCiclos) {
             clearInterval(timer);
             console.log("Meta no alcanzada. Se eliminaron demasiados ciclos.");
             clearInterval(temporizadorInterval);
+            mostrarEstadoFinal();
             return;
           }
         } else {
           console.log("No se pueden eliminar más ciclos. Meta no alcanzada.");
-          mostrarEstadoFinal(
-            estrellasCompletadas,
-            progresoAcumulado,
-            tiempoMetaEstable
-          );
+          mostrarEstadoFinal();
           clearInterval(timer);
           clearInterval(temporizadorInterval);
           return;
@@ -122,7 +150,7 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
 
       // Actualización del progreso visual
       const porcentajeProgreso = Math.min(
-        (progresoAcumulado / tiempoMetaEstable) * 100,
+        (estadoMeta.progresoAcumulado / estadoMeta.tiempoMetaEstable) * 100,
         100
       );
       barraProgreso.style.setProperty("--progreso", `${porcentajeProgreso}%`);
@@ -130,20 +158,19 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
       if (porcentajeProgreso >= 100) {
         // Completó el ciclo
         clearInterval(timer);
-        ciclosCompletados++;
-        console.log(`Ciclo completado: ${ciclosCompletados}/${totalCiclos}`);
+        estadoMeta.ciclosCompletados++;
+        console.log(`Ciclo completado: ${estadoMeta.ciclosCompletados}/${estadoMeta.totalCiclos}`);
 
-        if (estrellasCompletadas < estrellas.length) {
-          estrellas[estrellasCompletadas].classList.remove("estrella-inactiva");
-          estrellas[estrellasCompletadas].classList.add("estrella-activa");
-          estrellasCompletadas++;
+        if (estadoMeta.estrellasCompletadas < estrellas.length) {
+          estrellas[estadoMeta.estrellasCompletadas].classList.remove("estrella-inactiva");
+          estrellas[estadoMeta.estrellasCompletadas].classList.add("estrella-activa");
+          estadoMeta.estrellasCompletadas++;
         }
 
-        if (ciclosCompletados < totalCiclos) {
+        if (estadoMeta.ciclosCompletados < estadoMeta.totalCiclos) {
           // Si aún quedan ciclos por completar, iniciar el siguiente ciclo
           iniciarCiclo();
-        } else if (totalCiclos === 5){
-          console.log("Todos los ciclos completados, con todas las estrellas.");
+        } else if (estadoMeta.totalCiclos === 5) {
           // Aquí puedes agregar lógica adicional si todos los ciclos se completaron
         }
 
@@ -177,23 +204,98 @@ function marcarUltimaEstrellaPerdida() {
   }
 }
 
-function mostrarEstadoFinal(
-  estrellasCompletadas,
-  progresoAcumulado,
-  tiempoMetaEstable
-) {
+function mostrarEstadoFinal() {
+  // Mostrar el modal de vista final
+  const modalVistaFinal = document.getElementById("modalVistaFinal");
+  modalVistaFinal.classList.add("show");
+
+  // Seleccionar los elementos dinámicos del modal
+  const tituloModal = document.querySelector(".modal-vista-final-titulo");
+  const mensajeModal = document.querySelector(".modal-vista-final-mensaje");
+  const imagenRepresentacion = document.querySelector(".modal-vista-final-imagen img");
+  const barraProgreso = document.querySelector(".barra-progreso-vistaFinal");
+  const tablaEstadisticas = document.querySelector(".tabla-estadisticas");
+
   const porcentajeProgresoFinal = Math.min(
-    (progresoAcumulado / tiempoMetaEstable) * 100,
+    (estadoMeta.progresoAcumulado / estadoMeta.tiempoMetaEstable) * 100,
     100
   );
-  const porcentajeTotal =
-    estrellasCompletadas * 20 + porcentajeProgresoFinal * 0.2;
 
-  if (estrellasCompletadas < 5) {
-console.log('Estrellas completadas: ', estrellasCompletadas);
-    console.log(`Progreso acumulado total: ${porcentajeTotal.toFixed(2)}%`);
+  console.log(`Progreso acumulado del ciclo actual: ${porcentajeProgresoFinal}`);
+  console.log("Estrellas:ssss", estadoMeta.estrellasCompletadas);
+
+  // Inicialización del porcentaje total
+  let porcentajeTotal = estadoMeta.ciclosCompletados === estadoMeta.totalCiclos
+    ? estadoMeta.estrellasCompletadas * 20 // Caso en el que se completaron todos los ciclos
+    : estadoMeta.estrellasCompletadas < 5
+      ? estadoMeta.estrellasCompletadas * 20 + porcentajeProgresoFinal * 0.2 // Caso en el que no se completaron las estrellas
+      : 100; // Caso en el que se alcanzó el 100%
+
+  // Debugging opcional
+  console.log(
+    estadoMeta.estrellasCompletadas < 5 && estadoMeta.ciclosCompletados !== estadoMeta.totalCiclos
+      ? "Entró al caso de menos de 5 estrellas"
+      : "Entró al caso de 100%"
+  );
+
+  console.log(`Progreso acumulado total: ${porcentajeTotal.toFixed(2)}%`);
+
+
+  // Agregar datos dinámicos en la tabla de estadísticas
+  tablaEstadisticas.innerHTML = `
+    <tr>
+      <td>Ciclo Completado:</td>
+      <td>${estadoMeta.ciclosCompletados}/${estadoMeta.totalCiclos}</td>
+    </tr>
+    <tr>
+      <td>Estrellas Conseguidas:</td>
+      <td>${estadoMeta.estrellasCompletadas}</td>
+    </tr>
+  `;
+
+  // HASTA AHORA MEDIO FUNCIONA PERO ES UN PUNTO DE CONTROL
+  if (
+    estadoMeta.estrellasCompletadas < 5 &&
+    estadoMeta.ciclosCompletados === estadoMeta.totalCiclos &&
+    estadoMeta.progresoAcumulado < estadoMeta.tiempoMetaEstable
+  ) {
+    // Caso perder: Se estaba en el último ciclo pero llegó a alto antes de completarlo
+    tituloModal.innerText = "¡PERDISTE!";
+    mensajeModal.innerText = "Llegaste a alto en el último ciclo. ¡Inténtalo nuevamente!";
+    imagenRepresentacion.src = "./resources/imagenes/perder.png";
+    barraProgreso.style.width = `${porcentajeTotal}%`;
+    barraProgreso.innerText = `${porcentajeTotal.toFixed(2)}%`;
+  } else if (estadoMeta.estrellasCompletadas === 5 && estadoMeta.ciclosCompletados === estadoMeta.totalCiclos) {
+    // Caso ganar
+    tituloModal.innerText = "¡FELICIDADES!";
+    mensajeModal.innerText = "Todos los ciclos completados, con todas las estrellas. ¡Siuuu!";
+    imagenRepresentacion.src = "./resources/imagenes/ganar.png";
+    barraProgreso.style.width = `100%`;
+    barraProgreso.innerText = `100%`;
+  } else if (estadoMeta.progresoAcumulado > 0 && estadoMeta.ciclosCompletados < estadoMeta.totalCiclos) {
+    // Caso acabar
+    tituloModal.innerText = "Juego Terminado";
+    mensajeModal.innerText = "Casi lo logramos, volvamos a intentarlo.";
+    imagenRepresentacion.src = "./resources/imagenes/acabar.png";
+    barraProgreso.style.width = `${porcentajeTotal}%`;
+    barraProgreso.innerText = `${porcentajeTotal.toFixed(2)}%`;
+  } else {
+    // Caso genérico de pérdida
+    tituloModal.innerText = "¡PERDISTE!";
+    mensajeModal.innerText = "No se alcanzaron los objetivos. ¡Inténtalo nuevamente!";
+    imagenRepresentacion.src = "./resources/imagenes/perder.png";
+    barraProgreso.style.width = `${porcentajeTotal}%`;
+    barraProgreso.innerText = `${porcentajeTotal.toFixed(2)}%`;
   }
+
+
+  // Agregar evento para cerrar el modal
+  const btnCerrarVistaFinal = document.getElementById("cerrarModalVistaFinal");
+  btnCerrarVistaFinal.addEventListener("click", () => {
+    modalVistaFinal.classList.remove("show");
+  });
 }
 
+
 // Exponer la función de inicio del temporizador si es necesario
-export { iniciarTemporizador, calcularTiempoPorCiclo, iniciarBarraDeProgreso };
+export { iniciarTemporizador, calcularTiempoPorCiclo, iniciarBarraDeProgreso, resetearJuego };
