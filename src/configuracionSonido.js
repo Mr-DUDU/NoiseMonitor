@@ -7,13 +7,16 @@
 // Variables de umbrales de ruido
 let umbralSilencioso = 0;
 let umbralEstable = 20;
-let umbralModerado = umbralEstable + 20;
+let umbralModerado = umbralEstable + 30;
 let umbralAlto = umbralModerado + 20;
+// Crear un objeto de audio para el sonido SHHHH
+const sonidoShhh = new Audio('./resources/audios/shhh.mp3');
+
 /*
-Silencioso [0dB - 19dB]
-Estable [20dB - 49dB]
-Moderado [50dB - 79dB]
-Alto [80dB - 100dB]
+Silencioso [0dB - 19dB] 
+Estable [20dB - 49dB] 20
+Moderado [50dB - 79dB] 20
+Alto [80dB - 100dB] 20
 */
 // Rutas de imágenes para diferentes estados de ruido
 const imagenes = {
@@ -134,7 +137,6 @@ function iniciarDeteccionSonido(callback) {
         Moderado [40dB - 59dB]
         Alto [60dB - 100dB]
         */
-
         // Llamar al callback con el nivel de ruido y los umbrales actuales
         if (typeof callback === "function") {
           callback(nivelRuido, { umbralEstable, umbralModerado, umbralAlto });
@@ -207,6 +209,8 @@ function ajustarVisualizacion(nivelRuido) {
     if (estadoActualImagen !== "alto") {
       cambiarImagen(imagenEstado, imagenes.alto, "alto");
       textoEstado.innerText = "Alto";
+      // Reproducir el sonido SHHHH al llegar a "alto"
+      sonidoShhh.play().catch((error) => console.error("Error al reproducir sonido SHHHH:", error));
     }
     nuevoEstado = "alto";
   }

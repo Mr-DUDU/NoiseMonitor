@@ -111,7 +111,7 @@ function volverAlPanelConfiguracion() {
 function forzarOrientacionHorizontal() {
   if (window.innerHeight > window.innerWidth) {
     document.body.classList.add('forzar-horizontal');
-    alert('Por favor, gira tu dispositivo para tener una mejor experiencia.');
+    alert('Por favor, gira tu dispositivo horizontalmente para tener una mejor experiencia.');
   } else {
     document.body.classList.remove('forzar-horizontal');
   }

@@ -11,7 +11,7 @@ body {
 /* --------------------- Header --------------------- */
 header {
   height: 10vh;
-  background-color: #6EC6FF;
+  background-color: #6ec6ff;
   color: white;
   display: flex;
   align-items: center;
@@ -26,11 +26,10 @@ header {
   align-items: center;
 }
 
-
 /* --------------------- BLOQUE 1: Panel de configuración --------------------- */
 /* Botón de offcanvas */
 .menu-btn {
-  background-color: #6EC6FF;
+  background-color: #6ec6ff;
   /* Color de fondo del botón */
   border: none;
   color: white;
@@ -54,7 +53,7 @@ header {
 /* Efecto al pasar el mouse */
 .menu-btn:hover {
   transform: scale(1.1); /* Efecto de hover para agrandar */
-  background-color: #FFD43B;
+  background-color: #ffd43b;
   /* Color de fondo al hacer hover */
 }
 
@@ -200,18 +199,6 @@ header {
   margin-left: 0.5rem; /* Espacio entre el texto del estado y los decibeles */
 }
 
-
-
-/* --------------------- Footer --------------------- */
-footer {
-  height: 10vh;
-  background-color: #6EC6FF;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* --------------------- Section --------------------- */
 section {
   flex: 1;
@@ -223,37 +210,33 @@ section {
 }
 
 /* --------------------- Componentes de Section --------------------- */
-/* Card para el contenido principal */
-.card {
-  max-height: 70vh;
+/* Contenedor principal de estado de ruido */
+.estado-ruido-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; /* Altura fija de 70% del viewport */
+  width: 100%; /* Asegura que ocupe todo el ancho */
+  overflow: hidden; /* Evita que el contenido sobresalga */
+  
+}
+
+/* Wrapper para la imagen */
+.estado-imagen-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Ocupa todo el ancho del contenedor */
+  height: 100%; /* Ocupa toda la altura del contenedor */
   background-color: #FFF176;
 }
 
-/* Canvas para visualizador */
-#visualizador {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #007bff;
-  background-color: #F5F5F5;
-  border-radius: 10px;
-}
-
-/* Contenedor del canvas */
-.canvas-container {
-  height: 70vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Imagen en la sección de estado */
-#estado-imagen {
-  max-height: 100%;
-  transition: opacity 0.5s ease-in-out;
-  width: auto;
-  object-fit: contain;
+/* Imagen de estado */
+.estado-imagen {
+  max-width: 100%; /* Asegura que la imagen no exceda el ancho del contenedor */
+  max-height: 100%; /* Asegura que la imagen no exceda la altura del contenedor */
+  object-fit: contain; /* Evita distorsiones manteniendo proporciones */
+  transition: opacity 0.5s ease-in-out; /* Transición suave al cambiar */
 }
 
 /* --------------------- Slider para Umbrales --------------------- */
@@ -282,3 +265,15 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   border-radius: 50%;
 }
+
+/* --------------------- Footer --------------------- */
+footer {
+  height: 10vh;
+  background-color: #6ec6ff;
+  color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2vh;
+}
+

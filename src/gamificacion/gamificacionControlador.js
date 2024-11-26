@@ -1,6 +1,12 @@
 let temporizadorInterval;
 let tiempoRestante; // Variable global para almacenar el tiempo en segundos
 const estrellas = document.querySelectorAll(".fa-star");
+// Audios
+const sonidoEstrella = new Audio("./resources/audios/estrella_conseguida.mp3");
+const sonidoGanar = new Audio('./resources/audios/ganar.mp3');
+const sonidoTerminar = new Audio('./resources/audios/terminar.mp3');
+const sonidoPerder = new Audio('./resources/audios/perder.mp3');
+
 
 let estadoMeta = {
   estrellasCompletadas: 0,
@@ -38,7 +44,6 @@ function resetearJuego() {
 
   console.log("Juego reiniciado.");
 }
-
 
 /**
  * Función para iniciar el temporizador.
@@ -121,7 +126,7 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
       // Lógica de avance o retroceso según el estado
       if (estadoActual === "estable" || estadoActual === "silencioso") {
         // Incremento rápido en estado "estable"
-        estadoMeta.tiempoMetaEstable = tiempoPorCiclo * 0.7;
+        estadoMeta.tiempoMetaEstable = tiempoPorCiclo * 0.6;
         estadoMeta.progresoAcumulado += avanceRapido;
       } else if (estadoActual === "moderado") {
         // Retroceso en estado "moderado"
@@ -159,11 +164,24 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
         // Completó el ciclo
         clearInterval(timer);
         estadoMeta.ciclosCompletados++;
-        console.log(`Ciclo completado: ${estadoMeta.ciclosCompletados}/${estadoMeta.totalCiclos}`);
+        console.log(
+          `Ciclo completado: ${estadoMeta.ciclosCompletados}/${estadoMeta.totalCiclos}`
+        );
 
         if (estadoMeta.estrellasCompletadas < estrellas.length) {
-          estrellas[estadoMeta.estrellasCompletadas].classList.remove("estrella-inactiva");
-          estrellas[estadoMeta.estrellasCompletadas].classList.add("estrella-activa");
+          estrellas[estadoMeta.estrellasCompletadas].classList.remove(
+            "estrella-inactiva"
+          );
+          estrellas[estadoMeta.estrellasCompletadas].classList.add(
+            "estrella-activa"
+          );
+          // Reproducir sonido de estrella conseguida
+          sonidoEstrella.play().catch((error) => {
+            console.error(
+              "Error al reproducir sonido de estrella conseguida:",
+              error
+            );
+          });
           estadoMeta.estrellasCompletadas++;
         }
 
@@ -173,7 +191,6 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
         } else if (estadoMeta.totalCiclos === 5) {
           // Aquí puedes agregar lógica adicional si todos los ciclos se completaron
         }
-
       }
     }, intervalo);
   }
@@ -184,19 +201,17 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
 
 function eliminarCiclo(estrellasCompletadas) {
   console.log("Eliminando un ciclo debido a estado alto.");
-
 }
 
 function marcarUltimaEstrellaPerdida() {
-  const estrellas = document.querySelectorAll('.fa-star');
+  const estrellas = document.querySelectorAll(".fa-star");
   for (let i = estrellas.length - 1; i >= 0; i--) {
-    if (estrellas[i].classList.contains('estrella-inactiva')) {
+    if (estrellas[i].classList.contains("estrella-inactiva")) {
       // Quitar la clase de estrella inactiva
-      estrellas[i].classList.remove('estrella-inactiva');
+      estrellas[i].classList.remove("estrella-inactiva");
 
       // Agregar la clase de estrella perdida
-      estrellas[i].classList.add('estrella-perdida');
-
+      estrellas[i].classList.add("estrella-perdida");
 
       console.log(`Estrella en posición ${i} marcada como perdida.`);
       break; // Terminar el bucle después de encontrar y modificar la última estrella inactiva
@@ -212,7 +227,9 @@ function mostrarEstadoFinal() {
   // Seleccionar los elementos dinámicos del modal
   const tituloModal = document.querySelector(".modal-vista-final-titulo");
   const mensajeModal = document.querySelector(".modal-vista-final-mensaje");
-  const imagenRepresentacion = document.querySelector(".modal-vista-final-imagen img");
+  const imagenRepresentacion = document.querySelector(
+    ".modal-vista-final-imagen img"
+  );
   const barraProgreso = document.querySelector(".barra-progreso-vistaFinal");
   const tablaEstadisticas = document.querySelector(".tabla-estadisticas");
 
@@ -221,25 +238,31 @@ function mostrarEstadoFinal() {
     100
   );
 
-  console.log(`Progreso acumulado del ciclo actual: ${porcentajeProgresoFinal}`);
+  console.log(
+    `Progreso acumulado del ciclo actual: ${porcentajeProgresoFinal}`
+  );
   console.log("Estrellas:ssss", estadoMeta.estrellasCompletadas);
 
   // Inicialización del porcentaje total
-  let porcentajeTotal = estadoMeta.ciclosCompletados === estadoMeta.totalCiclos
-    ? estadoMeta.estrellasCompletadas * 20 // Caso en el que se completaron todos los ciclos
-    : estadoMeta.estrellasCompletadas < 5
+  let porcentajeTotal =
+    estadoMeta.ciclosCompletados === estadoMeta.totalCiclos
+      ? estadoMeta.estrellasCompletadas * 20 // Caso en el que se completaron todos los ciclos
+      : estadoMeta.estrellasCompletadas < 5
       ? estadoMeta.estrellasCompletadas * 20 + porcentajeProgresoFinal * 0.2 // Caso en el que no se completaron las estrellas
       : 100; // Caso en el que se alcanzó el 100%
 
   // Debugging opcional
   console.log(
-    estadoMeta.estrellasCompletadas < 5 && estadoMeta.ciclosCompletados !== estadoMeta.totalCiclos
+    estadoMeta.estrellasCompletadas < 5 &&
+      estadoMeta.ciclosCompletados !== estadoMeta.totalCiclos
       ? "Entró al caso de menos de 5 estrellas"
       : "Entró al caso de 100%"
   );
 
+  if (porcentajeTotal < 0) {
+    porcentajeTotal = 0;
+  }
   console.log(`Progreso acumulado total: ${porcentajeTotal.toFixed(2)}%`);
-
 
   // Agregar datos dinámicos en la tabla de estadísticas
   tablaEstadisticas.innerHTML = `
@@ -260,20 +283,31 @@ function mostrarEstadoFinal() {
     estadoMeta.progresoAcumulado < estadoMeta.tiempoMetaEstable
   ) {
     // Caso perder: Se estaba en el último ciclo pero llegó a alto antes de completarlo
+    sonidoPerder.play().catch((error) => console.error("Error al reproducir sonido de perder:", error));
     tituloModal.innerText = "¡PERDISTE!";
-    mensajeModal.innerText = "Llegaste a alto en el último ciclo. ¡Inténtalo nuevamente!";
+    mensajeModal.innerText =
+      "Llegaste a alto en el último ciclo. ¡Inténtalo nuevamente!";
     imagenRepresentacion.src = "./resources/imagenes/perder.png";
     barraProgreso.style.width = `${porcentajeTotal}%`;
     barraProgreso.innerText = `${porcentajeTotal.toFixed(2)}%`;
-  } else if (estadoMeta.estrellasCompletadas === 5 && estadoMeta.ciclosCompletados === estadoMeta.totalCiclos) {
+  } else if (
+    estadoMeta.estrellasCompletadas === 5 &&
+    estadoMeta.ciclosCompletados === estadoMeta.totalCiclos
+  ) {
     // Caso ganar
+    sonidoGanar.play().catch((error) => console.error("Error al reproducir sonido de ganar:", error));
     tituloModal.innerText = "¡FELICIDADES!";
-    mensajeModal.innerText = "Todos los ciclos completados, con todas las estrellas. ¡Siuuu!";
+    mensajeModal.innerText =
+      "Todos los ciclos completados, con todas las estrellas. ¡Siuuu!";
     imagenRepresentacion.src = "./resources/imagenes/ganar.png";
     barraProgreso.style.width = `100%`;
     barraProgreso.innerText = `100%`;
-  } else if (estadoMeta.progresoAcumulado > 0 && estadoMeta.ciclosCompletados < estadoMeta.totalCiclos) {
+  } else if (
+    estadoMeta.progresoAcumulado > 0 &&
+    estadoMeta.ciclosCompletados < estadoMeta.totalCiclos
+  ) {
     // Caso acabar
+    sonidoTerminar.play().catch((error) => console.error("Error al reproducir sonido de terminar:", error));
     tituloModal.innerText = "Juego Terminado";
     mensajeModal.innerText = "Casi lo logramos, volvamos a intentarlo.";
     imagenRepresentacion.src = "./resources/imagenes/acabar.png";
@@ -281,13 +315,14 @@ function mostrarEstadoFinal() {
     barraProgreso.innerText = `${porcentajeTotal.toFixed(2)}%`;
   } else {
     // Caso genérico de pérdida
+    sonidoPerder.play().catch((error) => console.error("Error al reproducir sonido de perder:", error));
     tituloModal.innerText = "¡PERDISTE!";
-    mensajeModal.innerText = "No se alcanzaron los objetivos. ¡Inténtalo nuevamente!";
+    mensajeModal.innerText =
+      "No se alcanzaron los objetivos. ¡Inténtalo nuevamente!";
     imagenRepresentacion.src = "./resources/imagenes/perder.png";
     barraProgreso.style.width = `${porcentajeTotal}%`;
     barraProgreso.innerText = `${porcentajeTotal.toFixed(2)}%`;
   }
-
 
   // Agregar evento para cerrar el modal
   const btnCerrarVistaFinal = document.getElementById("cerrarModalVistaFinal");
@@ -296,6 +331,10 @@ function mostrarEstadoFinal() {
   });
 }
 
-
 // Exponer la función de inicio del temporizador si es necesario
-export { iniciarTemporizador, calcularTiempoPorCiclo, iniciarBarraDeProgreso, resetearJuego };
+export {
+  iniciarTemporizador,
+  calcularTiempoPorCiclo,
+  iniciarBarraDeProgreso,
+  resetearJuego,
+};
