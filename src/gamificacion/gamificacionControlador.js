@@ -100,7 +100,7 @@ function iniciarBarraDeProgreso(tiempoPorCiclo) {
   const intervalo = 1000;
   estadoMeta.tiempoMetaEstable = tiempoPorCiclo * 0.8;
   let avanceRapido = (tiempoPorCiclo * 0.8) / (tiempoPorCiclo / intervalo);
-
+  
   function iniciarCiclo() {
     // Reiniciar la barra de progreso al iniciar cada ciclo
     barraProgreso.style.setProperty("--progreso", "0%");
@@ -248,8 +248,8 @@ function mostrarEstadoFinal() {
     estadoMeta.ciclosCompletados === estadoMeta.totalCiclos
       ? estadoMeta.estrellasCompletadas * 20 // Caso en el que se completaron todos los ciclos
       : estadoMeta.estrellasCompletadas < 5
-      ? estadoMeta.estrellasCompletadas * 20 + porcentajeProgresoFinal * 0.2 // Caso en el que no se completaron las estrellas
-      : 100; // Caso en el que se alcanzó el 100%
+        ? estadoMeta.estrellasCompletadas * 20 + porcentajeProgresoFinal * 0.2 // Caso en el que no se completaron las estrellas
+        : 100; // Caso en el que se alcanzó el 100%
 
   // Debugging opcional
   console.log(
@@ -271,7 +271,7 @@ function mostrarEstadoFinal() {
       <td>${estadoMeta.ciclosCompletados}/${estadoMeta.totalCiclos}</td>
     </tr>
     <tr>
-      <td>Estrellas Conseguidas:</td>
+      <td>Estrellas Conseguidas:  </td>
       <td>${estadoMeta.estrellasCompletadas}</td>
     </tr>
   `;
@@ -295,10 +295,18 @@ function mostrarEstadoFinal() {
     estadoMeta.ciclosCompletados === estadoMeta.totalCiclos
   ) {
     // Caso ganar
-    sonidoGanar.play().catch((error) => console.error("Error al reproducir sonido de ganar:", error));
+    sonidoGanar.play()
+      .then(() => {
+        // Detén el audio después de 5 segundos
+        setTimeout(() => {
+          sonidoGanar.pause();
+          sonidoGanar.currentTime = 0; // Reinicia el audio al inicio, si es necesario
+        }, 5000);
+      })
+      .catch((error) => console.error("Error al reproducir sonido de ganar:", error));
     tituloModal.innerText = "¡FELICIDADES!";
     mensajeModal.innerText =
-      "Todos los ciclos completados, con todas las estrellas. ¡Siuuu!";
+      "Todos los ciclos completados, con todas las estrellas.";
     imagenRepresentacion.src = "./resources/imagenes/ganar.png";
     barraProgreso.style.width = `100%`;
     barraProgreso.innerText = `100%`;

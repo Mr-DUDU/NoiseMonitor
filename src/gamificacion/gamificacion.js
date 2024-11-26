@@ -21,7 +21,7 @@ duracionMetaInput.addEventListener('input', function () {
 const guardarMetaBtn = document.getElementById('guardarMetaBtn');
 guardarMetaBtn.addEventListener("click", function () {
   const duracionSeleccionada = parseInt(duracionMetaInput.value);
-  //const duracionSeleccionada = 1 / 2;
+  //const duracionSeleccionada = 1/2;
   console.log(`Duración de la meta seleccionada: ${duracionSeleccionada} minutos`);
 
   // Resetear el juego antes de iniciar una nueva meta

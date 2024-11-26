@@ -7,7 +7,7 @@
 // Variables de umbrales de ruido
 let umbralSilencioso = 0;
 let umbralEstable = 20;
-let umbralModerado = umbralEstable + 30;
+let umbralModerado = umbralEstable + 20;
 let umbralAlto = umbralModerado + 20;
 // Crear un objeto de audio para el sonido SHHHH
 const sonidoShhh = new Audio('./resources/audios/shhh.mp3');
@@ -130,7 +130,7 @@ function iniciarDeteccionSonido(callback) {
         requestAnimationFrame(procesarNivelRuido);
         analyser.getByteFrequencyData(dataArray);
         let nivelRuido = calcularNivelRuido(dataArray);
-        //nivelRuido = 59
+        //nivelRuido = 204
         /*
         Silencioso [0dB - 19dB]
         Estable [20dB - 39dB]

@@ -6,6 +6,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
 }
 
 /* --------------------- Header --------------------- */
@@ -70,6 +71,7 @@ header {
 }
 
 .offcanvas-body {
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
   display: flex;
   flex-direction: column;
   justify-content: center;

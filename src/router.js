@@ -13,6 +13,10 @@ import {
   iniciarEscenarioBarras,
   actualizarVisualizacionBarras,
 } from "./escenarios/escenarioBarras.js";
+import {
+  iniciarEscenarioVelocimetro,
+  actualizarVisualizacionVelocimetro,
+} from "./escenarios/escenarioVelocimetro.js";
 
 // Variable para almacenar la función de visualización del escenario activo
 let actualizarVisualizacionActual;
@@ -51,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Inicializar el escenario por defecto (barras de sonido)
-  seleccionarEscenario("barras");
+  seleccionarEscenario("velocimetro");
 
   // Configurar selector de escenario en el frontend
   const escenarioSelector = document.getElementById("escenarioSelector");
@@ -75,17 +79,39 @@ document.addEventListener("DOMContentLoaded", () => {
  * @param {string} escenario - Nombre del escenario a seleccionar.
  */
 function seleccionarEscenario(escenario) {
+  const estadoDecibeles = document.getElementById("estado-decibeles");
+  const canvas = document.getElementById("visualizador");
+
+  // Limpiar cualquier clase previa
+  canvas.classList.remove("barras-style", "velocimetro-style");
+
+  // Asignar la clase según el escenario seleccionado
+  if (escenario === "barras") {
+    canvas.classList.add("barras-style");
+  } else if (escenario === "velocimetro") {
+    canvas.classList.add("velocimetro-style");
+  }
   // Limpiar cualquier visualización o configuración previa del escenario activo
   if (actualizarVisualizacionActual) {
     console.log("Limpiando escenario anterior...");
-    actualizarVisualizacionActual = null; // Opcional, dependiendo de la lógica de limpieza que se requiera
+    actualizarVisualizacionActual = null;
+  }
+
+  // Manejar la visibilidad del texto de decibeles según el escenario
+  if (estadoDecibeles) {
+    estadoDecibeles.style.display =
+      escenario === "velocimetro" ? "none" : "block";
   }
 
   switch (escenario) {
     case "barras":
-      console.log("Cargando el escenario de barras de sonido...");
       iniciarEscenarioBarras();
       actualizarVisualizacionActual = actualizarVisualizacionBarras;
+      break;
+
+    case "velocimetro":
+      iniciarEscenarioVelocimetro();
+      actualizarVisualizacionActual = actualizarVisualizacionVelocimetro;
       break;
 
     default:
@@ -93,6 +119,30 @@ function seleccionarEscenario(escenario) {
       break;
   }
 }
+
+function cerrarAmbosOffcanvas() {
+  // Cerrar el Offcanvas de Escenarios
+  const offcanvasEscenarios = bootstrap.Offcanvas.getInstance(
+    document.getElementById("offcanvasEscenarios")
+  );
+  if (offcanvasEscenarios) {
+    offcanvasEscenarios.hide();
+  }
+
+  // Cerrar el Offcanvas del Panel de Configuración
+  const panelConfiguracion = bootstrap.Offcanvas.getInstance(
+    document.getElementById("panelConfiguracion")
+  );
+  if (panelConfiguracion) {
+    panelConfiguracion.hide();
+  }
+}
+
+// Exponer cerrarAmbosOffcanvas al ámbito global
+window.cerrarAmbosOffcanvas = cerrarAmbosOffcanvas;
+// Exponer seleccionarEscenario al ámbito global
+window.seleccionarEscenario = seleccionarEscenario;
+
 
 //---------------------------- OffCanvas funcion -----------------------
 function volverAlPanelConfiguracion() {
@@ -136,4 +186,4 @@ function toggleFullScreen() {
 }
 
 // Exportar la función de selección de escenario si es necesario en otros módulos
-export { seleccionarEscenario , volverAlPanelConfiguracion,toggleFullScreen};
+export { seleccionarEscenario, volverAlPanelConfiguracion, toggleFullScreen };

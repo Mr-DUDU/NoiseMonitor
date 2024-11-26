@@ -1,508 +1,319 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Título de la página -->
-    <title>Monitor de ruido en el aula</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+  <!-- Título de la página -->
+  <title>Monitor de ruido en el aula</title>
 
-    <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="/styles/styles.css" />
-    <link rel="stylesheet" href="styles/gamificacion.css" />
-    <link rel="stylesheet" href="/styles/escenarios.css" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- FontAwesome (sin atributos de integridad) -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      rel="stylesheet"
-    />
-  </head>
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="/styles/styles.css" />
+  <link rel="stylesheet" href="styles/gamificacion.css" />
+  <link rel="stylesheet" href="/styles/escenarios.css" />
 
-  <body>
-    <!--                                              HEADER                                                   -->
-    <header
-      class="header d-flex align-items-center justify-content-between px-4"
-    >
-      <!-- Bloque 1: Configuración y Estado (40% de ancho) -->
-      <div
-        class="header-bloque"
-        style="flex-basis: 40%; display: flex; align-items: center"
-      >
-        <!-- Botón de configuración -->
-        <button
-          class="menu-btn me-4"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#panelConfiguracion"
-          aria-controls="panelConfiguracion"
-        >
-          <i class="fa-solid fa-bars fa-2xs"></i>
-        </button>
-        <!-- Contenedor del texto de estado -->
-        <div class="estado-ruido d-flex align-items-center">
-          <h1 class="titulo-estado">Estado:</h1>
-          <div class="estado-detalle ms-2 d-flex align-items-center">
-            <h1 id="estado-texto" class="me-2 estado-variable">Silencioso</h1>
-            <!-- Se agrega clase "estado-variable" -->
-            <span id="estado-decibeles" class="decibeles-texto">0 dB</span>
-          </div>
+  <!-- FontAwesome (sin atributos de integridad) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <!--                                              HEADER                                                   -->
+  <header class="header d-flex align-items-center justify-content-between px-4">
+    <!-- Bloque 1: Configuración y Estado (40% de ancho) -->
+    <div class="header-bloque" style="flex-basis: 40%; display: flex; align-items: center">
+      <!-- Botón de configuración -->
+      <button class="menu-btn me-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#panelConfiguracion"
+        aria-controls="panelConfiguracion">
+        <i class="fa-solid fa-bars fa-2xs"></i>
+      </button>
+      <!-- Contenedor del texto de estado -->
+      <div class="estado-ruido d-flex align-items-center">
+        <h1 class="titulo-estado">Estado:</h1>
+        <div class="estado-detalle ms-2 d-flex align-items-center">
+          <h1 id="estado-texto" class="me-2 estado-variable">Silencioso</h1>
+          <!-- Se agrega clase "estado-variable" -->
+          <span id="estado-decibeles" class="decibeles-texto">0 dB</span>
         </div>
       </div>
+    </div>
 
-      <!-- Bloque 2: Temporizador (20% de ancho) -->
-      <div
-        class="header-bloque"
-        style="flex-basis: 20%; display: flex; justify-content: center"
-      >
-        <div id="temporizador" class="temporizador">00:00</div>
-      </div>
+    <!-- Bloque 2: Temporizador (20% de ancho) -->
+    <div class="header-bloque" style="flex-basis: 20%; display: flex; justify-content: center">
+      <div id="temporizador" class="temporizador">00:00</div>
+    </div>
 
-      <!-- Bloque 3: Estrellas y Botón de Gamificación (40% de ancho) -->
-      <div
-        class="header-bloque"
-        style="
+    <!-- Bloque 3: Estrellas y Botón de Gamificación (40% de ancho) -->
+    <div class="header-bloque" style="
           flex-basis: 40%;
           display: flex;
           justify-content: flex-end;
           align-items: center;
-        "
-      >
-        <!-- Contenedor de estrellas de progreso -->
-        <div class="estrellas-progreso d-flex align-items-center me-3">
-          <i class="fa-solid fa-star estrella-inactiva"></i>
-          <i class="fa-solid fa-star estrella-inactiva"></i>
-          <i class="fa-solid fa-star estrella-inactiva"></i>
-          <i class="fa-solid fa-star estrella-inactiva"></i>
-          <i class="fa-solid fa-star estrella-inactiva"></i>
+        ">
+      <!-- Contenedor de estrellas de progreso -->
+      <div class="estrellas-progreso d-flex align-items-center me-3">
+        <i class="fa-solid fa-star estrella-inactiva"></i>
+        <i class="fa-solid fa-star estrella-inactiva"></i>
+        <i class="fa-solid fa-star estrella-inactiva"></i>
+        <i class="fa-solid fa-star estrella-inactiva"></i>
+        <i class="fa-solid fa-star estrella-inactiva"></i>
+      </div>
+      <!-- Botón de logros -->
+      <!-- Botón de logros que activa el offcanvas -->
+      <button class="btn btn-outline-secondary icono-logros" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasMetas" aria-controls="offcanvasMetas">
+        <i class="fa-solid fa-gamepad"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Offcanvas del Panel de Configuración -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="panelConfiguracion"
+    aria-labelledby="panelConfiguracionLabel">
+    <div class="offcanvas-header m-2">
+      <h5 class="offcanvas-title" id="panelConfiguracionLabel">
+        Panel de configuración
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- Botones del panel -->
+      <button class="icono-contenedor" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEscenarios"
+        aria-controls="offcanvasEscenarios">
+        <i class="fa-solid fa-theater-masks fa-2x"></i>
+        <p>Escenario</p>
+      </button>
+      <button class="icono-contenedor" type="button" data-bs-toggle="modal" data-bs-target="#modalCalibracion">
+        <i class="fa-solid fa-cog fa-2x"></i>
+        <p>Calibrar sensibilidad del micrófono</p>
+      </button>
+      <button class="icono-contenedor" type="button" id="expandirPantallaBtn">
+        <i class="fa-solid fa-expand-arrows-alt fa-2x"></i>
+        <p>Expandir pantalla</p>
+      </button>
+    </div>
+  </div>
+
+  <!-- Offcanvas de Metas de Silencio -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMetas" aria-labelledby="offcanvasMetasLabel">
+    <div class="offcanvas-header">
+      <h5 id="offcanvasMetasLabel">Juegos</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- Botón de Metas de Silencio que activa el modal -->
+      <button class="icono-contenedor" type="button" data-bs-toggle="modal" data-bs-target="#modalDefinirMeta">
+        <i class="fa-regular fa-bell-slash"></i><!-- Cambia el ícono si lo deseas -->
+        <p>Metas de Silencio</p>
+      </button>
+    </div>
+  </div>
+
+  <!-- Offcanvas de Escenario-->
+  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasEscenarios"
+    aria-labelledby="offcanvasEscenariosLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasEscenariosLabel">
+        Seleccione un escenario
+      </h5>
+      <!-- Botón de "Volver atrás" -->
+      <!-- Botón de retroceso con llamado desde router.js -->
+      <button type="button" class="btn" aria-label="Volver al panel de configuración" id="btnVolverPanel">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- Contenido de los botones de escenarios -->
+      <button class="icono-contenedor" type="button" onclick="seleccionarEscenario('barras'); cerrarAmbosOffcanvas();">
+        <i class="fa-solid fa-chart-bar fa-2x"></i>
+        <p>Barras de Sonido</p>
+      </button>
+      <button class="icono-contenedor" type="button"
+        onclick="seleccionarEscenario('velocimetro'); cerrarAmbosOffcanvas();">
+        <i class="fa-solid fa-gauge"></i>
+        <p>Velocímetro</p>
+      </button>
+      <button class="icono-contenedor" type="button"
+        onclick="seleccionarEscenario('infantil'); cerrarAmbosOffcanvas();">
+        <i class="fa-solid fa-child fa-2x"></i>
+        <p>Escenario Infantil</p>
+      </button>
+    </div>
+  </div>
+
+  <!-- Section de Gamificación -->
+  <!-- Modal para Definir la Meta (Sesión) -->
+  <div class="modal fade" id="modalDefinirMeta" tabindex="-1" aria-labelledby="modalDefinirMetaLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-info text-light">
+          <h5 class="modal-title" id="modalDefinirMetaLabel">
+            Definir meta de silencio
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <!-- Botón de logros -->
-        <!-- Botón de logros que activa el offcanvas -->
-        <button
-          class="btn btn-outline-secondary icono-logros"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasMetas"
-          aria-controls="offcanvasMetas"
-        >
-          <i class="fa-solid fa-gamepad"></i>
-        </button>
-      </div>
-    </header>
-
-    <!-- Offcanvas del Panel de Configuración -->
-    <div
-      class="offcanvas offcanvas-start"
-      tabindex="-1"
-      id="panelConfiguracion"
-      aria-labelledby="panelConfiguracionLabel"
-    >
-      <div class="offcanvas-header m-2">
-        <h5 class="offcanvas-title" id="panelConfiguracionLabel">
-          Panel de configuración
-        </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="offcanvas"
-          aria-label="Cerrar"
-        ></button>
-      </div>
-      <div class="offcanvas-body">
-        <!-- Botones del panel -->
-        <button
-          class="icono-contenedor"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasEscenarios"
-          aria-controls="offcanvasEscenarios"
-        >
-          <i class="fa-solid fa-theater-masks fa-2x"></i>
-          <p>Escenario</p>
-        </button>
-        <button
-          class="icono-contenedor"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#modalCalibracion"
-        >
-          <i class="fa-solid fa-cog fa-2x"></i>
-          <p>Calibrar sensibilidad del micrófono</p>
-        </button>
-        <button class="icono-contenedor" type="button" id="expandirPantallaBtn">
-          <i class="fa-solid fa-expand-arrows-alt fa-2x"></i>
-          <p>Expandir pantalla</p>
-        </button>
+        <div class="modal-body">
+          <label for="duracionMeta" class="form-label">Selecciona la duración de la meta (en minutos):</label>
+          <input type="range" class="form-range" id="duracionMeta" min="5" max="60" step="5" value="5" />
+          <p>
+            -5----10----15----20---25----30----35---40----45----50---55---60
+          </p>
+          <p>
+            Duración seleccionada:
+            <span id="valorDuracionMeta">5</span> minutos
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="button" class="btn bg-info text-light w-25" id="guardarMetaBtn">
+            <i class="fa-solid fa-play"></i>
+          </button>
+        </div>
       </div>
     </div>
-
-    <!-- Offcanvas de Metas de Silencio -->
-    <div
-      class="offcanvas offcanvas-end"
-      tabindex="-1"
-      id="offcanvasMetas"
-      aria-labelledby="offcanvasMetasLabel"
-    >
-      <div class="offcanvas-header">
-        <h5 id="offcanvasMetasLabel">Juegos</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="offcanvas"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="offcanvas-body">
-        <!-- Botón de Metas de Silencio que activa el modal -->
-        <!-- Botón de Metas de Silencio que activa el modal -->
-        <button
-          class="icono-contenedor"
-          type="button"
-          data-bs-toggle="modal"
-          data-bs-target="#modalDefinirMeta"
-        >
-          <i class="fa-regular fa-bell-slash"></i
-          ><!-- Cambia el ícono si lo deseas -->
-          <p>Metas de Silencio</p>
-        </button>
-      </div>
-    </div>
-
-    <!-- Offcanvas de Escenario-->
-    <div
-      class="offcanvas offcanvas-start"
-      data-bs-backdrop="static"
-      tabindex="-1"
-      id="offcanvasEscenarios"
-      aria-labelledby="offcanvasEscenariosLabel"
-    >
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasEscenariosLabel">
-          Seleccione un escenario
-        </h5>
-        <!-- Botón de "Volver atrás" -->
-        <!-- Botón de retroceso con llamado desde router.js -->
-        <button
-          type="button"
-          class="btn"
-          aria-label="Volver al panel de configuración"
-          id="btnVolverPanel"
-        >
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
-      </div>
-      <div class="offcanvas-body">
-        <!-- Contenido de los botones de escenarios -->
-        <button
-          class="icono-contenedor"
-          type="button"
-          onclick="cambiarEscenario('barras')"
-        >
-          <i class="fa-solid fa-chart-bar fa-2x"></i>
-          <p>Barras de Sonido</p>
-        </button>
-        <button
-          class="icono-contenedor"
-          type="button"
-          onclick="cambiarEscenario('infantil')"
-        >
-          <i class="fa-solid fa-child fa-2x"></i>
-          <p>Escenario Infantil</p>
-        </button>
-        <button
-          class="icono-contenedor"
-          type="button"
-          onclick="cambiarEscenario('medio')"
-        >
-          <i class="fa-solid fa-tree fa-2x"></i>
-          <p>Escenario Medio</p>
-        </button>
-      </div>
-    </div>
-
-    <!-- Section de Gamificación -->
-    <!-- Modal para Definir la Meta (Sesión) -->
-    <div
-      class="modal fade"
-      id="modalDefinirMeta"
-      tabindex="-1"
-      aria-labelledby="modalDefinirMetaLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header bg-info text-light">
-            <h5 class="modal-title" id="modalDefinirMetaLabel">
-              Definir meta de silencio
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <label for="duracionMeta" class="form-label"
-              >Selecciona la duración de la meta (en minutos):</label
-            >
-            <input
-              type="range"
-              class="form-range"
-              id="duracionMeta"
-              min="5"
-              max="60"
-              step="5"
-              value="5"
-            />
-            <p>
-              -5----10----15----20---25----30----35---40----45----50---55---60
-            </p>
-            <p>
-              Duración seleccionada:
-              <span id="valorDuracionMeta">5</span> minutos
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              class="btn bg-info text-light w-25"
-              id="guardarMetaBtn"
-            >
-              <i class="fa-solid fa-play"></i>
-            </button>
+  </div>
+  <!-- Modal Vista Final -->
+  <div id="modalVistaFinal" class="modal-vista-final-overlay">
+    <div class="modal-vista-final-content">
+      <button id="cerrarModalVistaFinal" class="btn-cerrar-vista-final">
+        &times;
+      </button>
+      <div class="modal-vista-final-body">
+        <!-- Representación de la imagen -->
+        <div class="modal-vista-final-imagen">
+          <img src="" alt="Estado final" />
+        </div>
+        <!-- Textos dinámicos -->
+        <div class="modal-vista-final-textos">
+          <h1 class="modal-vista-final-titulo">XXXXXXX</h1>
+          <p class="modal-vista-final-mensaje">---Mensaje---</p>
+          <!-- Tabla de estadísticas -->
+          <table class="tabla-estadisticas"></table>
+          <div class="modal-vista-final-barra-progreso">
+            <div class="barra-progreso-vistaFinal"></div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Modal Vista Final -->
-    <div id="modalVistaFinal" class="modal-vista-final-overlay">
-      <div class="modal-vista-final-content">
-        <button id="cerrarModalVistaFinal" class="btn-cerrar-vista-final">
-          &times;
-        </button>
-        <div class="modal-vista-final-body">
-          <!-- Representación de la imagen -->
-          <div class="modal-vista-final-imagen">
-            <img src="" alt="Estado final" />
-          </div>
-          <!-- Textos dinámicos -->
-          <div class="modal-vista-final-textos">
-            <h1 class="modal-vista-final-titulo">XXXXXXX</h1>
-            <p class="modal-vista-final-mensaje">---Mensaje---</p>
-            <!-- Tabla de estadísticas -->
-            <table class="tabla-estadisticas"></table>
-            <div class="modal-vista-final-barra-progreso">
-              <div class="barra-progreso-vistaFinal"></div>
-            </div>
+  </div>
+
+  <!--                                              SECTION CENTRAL                                                  -->
+  <section class="d-flex align-items-center justify-content-center">
+    <div class="container text-center">
+      <div class="row">
+        <div class="progreso-meta">
+          <div id="barraProgreso" class="barra-progreso"></div>
+        </div>
+        <!-- Monitor -->
+        <div class="col-8" style="height: 70vh">
+          <!-- Canvas -->
+          <canvas id="visualizador"></canvas>
+        </div>
+        <!-- Sección de imagen -->
+        <div class="col-4 d-flex flex-column justify-content-between" style="height: 70vh">
+          <div class="estado-imagen-wrapper rounded-3">
+            <img id="estado-imagen" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
+              alt="Estado del ruido" class="estado-imagen" />
           </div>
         </div>
-      </div>
-    </div>
-
-    <!--                                              SECTION CENTRAL                                                  -->
-    <section class="d-flex align-items-center justify-content-center">
-      <div class="container text-center">
-        <div class="row">
-          <div class="progreso-meta">
-            <div id="barraProgreso" class="barra-progreso"></div>
-          </div>
-          <!-- Monitor -->
-          <div class="col-8 canvas-container">
-            <!-- Canvas -->
-            <canvas id="visualizador"></canvas>
-          </div>
-          <!-- Sección de imagen -->
-          <div
-            class="col-4 d-flex flex-column justify-content-between"
-            style="height: 70vh "
-          >
-            <div class="estado-imagen-wrapper rounded-3">
-              <img
-                id="estado-imagen"
-                src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif"
-                alt="Estado del ruido"
-                class="estado-imagen"
-              />
-            </div>
-          </div>
-          <!-- Modal para Calibración -->
-          <div
-            class="modal fade"
-            id="modalCalibracion"
-            tabindex="-1"
-            aria-labelledby="modalCalibracionLabel"
-            aria-hidden="true"
-          >
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header bg-warning">
-                  <h5 class="modal-title" id="modalCalibracionLabel">
-                    Calibrar umbral estable
-                  </h5>
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Cerrar"
-                  ></button>
+        <!-- Modal para Calibración -->
+        <div class="modal fade" id="modalCalibracion" tabindex="-1" aria-labelledby="modalCalibracionLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="modalCalibracionLabel">
+                  Calibrar umbral estable
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="sliderEstable">Ruido Estable (20-60 dB)</label>
+                  <input type="range" id="sliderEstable" min="20" max="40" value="20" class="form-range"
+                    oninput="actualizarUmbral('estable', this.value)" />
+                  <p>Valor actual: <span id="valorEstable">20</span> dB</p>
                 </div>
-                <div class="modal-body">
-                  <div class="form-group">
-                    <label for="sliderEstable">Ruido Estable (20-60 dB)</label>
-                    <input
-                      type="range"
-                      id="sliderEstable"
-                      min="20"
-                      max="40"
-                      value="20"
-                      class="form-range"
-                      oninput="actualizarUmbral('estable', this.value)"
-                    />
-                    <p>Valor actual: <span id="valorEstable">20</span> dB</p>
-                  </div>
-                  <div class="mt-3">
-                    <h6>Rangos de Umbrales:</h6>
-                    <ul>
-                      <li>
-                        Silencioso: <span id="rangoSilencioso">0 - 19</span> dB
-                      </li>
-                      <li>
-                        Estable: <span id="rangoEstable">20 - 39</span> dB
-                      </li>
-                      <li>
-                        Moderado: <span id="rangoModerado">40 - 59</span> dB
-                      </li>
-                      <li>Alto: <span id="rangoAlto">60 - 100</span> dB</li>
-                    </ul>
-                  </div>
+                <div class="mt-3">
+                  <h6>Rangos de Umbrales:</h6>
+                  <ul>
+                    <li>
+                      Silencioso: <span id="rangoSilencioso">0 - 19</span> dB
+                    </li>
+                    <li>
+                      Estable: <span id="rangoEstable">20 - 39</span> dB
+                    </li>
+                    <li>
+                      Moderado: <span id="rangoModerado">40 - 59</span> dB
+                    </li>
+                    <li>Alto: <span id="rangoAlto">60 - 100</span> dB</li>
+                  </ul>
                 </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Cerrar
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-warning"
-                    onclick="guardarCalibracion()"
-                  >
-                    Guardar Cambios
-                  </button>
-                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  Cerrar
+                </button>
+                <button type="button" class="btn btn-warning" onclick="guardarCalibracion()">
+                  Guardar Cambios
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!--                                              FOOTER                                                  -->
-    <footer class="d-flex align-items-center justify-content-center">
-      <p class="text-center m-0 d-flex align-items-center">
-        &copy; 2024 Dirección Nacional de Tecnologías para la Educación |
-        Desarrollado por: David Averos
-      </p>
-      <span
-        class="mx-3"
-        style="border-left: 1px solid #d3d3d3; height: 50%"
-      ></span>
-      <small class="text-center d-flex align-items-center">
-        <a
-          href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-light"
-          style="
+  <!--                                              FOOTER                                                  -->
+  <footer class="d-flex align-items-center justify-content-center">
+    <p class="text-center m-0 d-flex align-items-center">
+      &copy; 2024 Dirección Nacional de Tecnologías para la Educación |
+      Desarrollado por: David Averos
+    </p>
+    <span class="mx-3" style="border-left: 1px solid #d3d3d3; height: 50%"></span>
+    <small class="text-center d-flex align-items-center">
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/?ref=chooser-v1" target="_blank"
+        rel="noopener noreferrer" class="text-light" style="
             color: rgba(255, 255, 255, 0.7) !important;
             display: flex;
             align-items: center;
-          "
-        >
-          Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-          International
-          <span class="d-flex align-items-center ms-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              style="margin-left: 5px"
-            >
-              <image
-                href="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              style="margin-left: 5px"
-            >
-              <image
-                href="https://mirrors.creativecommons.org/presskit/icons/by.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              style="margin-left: 5px"
-            >
-              <image
-                href="https://mirrors.creativecommons.org/presskit/icons/nc.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              style="margin-left: 5px"
-            >
-              <image
-                href="https://mirrors.creativecommons.org/presskit/icons/sa.svg"
-                width="24"
-                height="24"
-              />
-            </svg>
-          </span>
-        </a>
-      </small>
-    </footer>
+          ">
+        Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+        International
+        <span class="d-flex align-items-center ms-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px">
+            <image href="https://mirrors.creativecommons.org/presskit/icons/cc.svg" width="24" height="24" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px">
+            <image href="https://mirrors.creativecommons.org/presskit/icons/by.svg" width="24" height="24" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px">
+            <image href="https://mirrors.creativecommons.org/presskit/icons/nc.svg" width="24" height="24" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="margin-left: 5px">
+            <image href="https://mirrors.creativecommons.org/presskit/icons/sa.svg" width="24" height="24" />
+          </svg>
+        </span>
+      </a>
+    </small>
+  </footer>
 
-    <!--                                              Scripts                                                  -->
-    <script src="src/configuracionSonido.js" type="module"></script>
-    <script src="src/router.js" type="module"></script>
+  <!--                                              Scripts                                                  -->
+  <script src="src/configuracionSonido.js" type="module"></script>
+  <script src="src/router.js" type="module"></script>
 
-    <!-- Bootstrap JS y Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Bootstrap JS y Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Gamificación -->
-    <script src="src/gamificacion/gamificacion.js" type="module"></script>
-  </body>
+  <!-- Gamificación -->
+  <script src="src/gamificacion/gamificacion.js" type="module"></script>
+</body>
+
 </html>

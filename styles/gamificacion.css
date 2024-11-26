@@ -177,9 +177,15 @@
 
 /* Título del modal */
 .modal-vista-final-titulo {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
+  text-align: center;
+  /* Centra el título */
+  font-size: 5vh;
+  /* Tamaño relativo a la altura de la ventana */
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+  /* Tipografía infantil */
+  color: #ffd43b;
+  ;
+  /* Color del texto */
 }
 
 /* Mensaje del modal */
@@ -198,11 +204,17 @@
   margin-top: 10px;
 }
 
-.barra-progreso-vistaFinal{
+.barra-progreso-vistaFinal {
   width: 50%;
   /* Simula el progreso */
   height: 100%;
   background-color: #76c7c0;
+  line-height: 20px;
+  /* Alinea el texto verticalmente */
+  text-align: center;
+  /* Centra el texto dentro de la barra */
+  color: white;
+  /* Color del texto */
 }
 
 /* Mostrar modal */
